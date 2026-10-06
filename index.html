@@ -1,0 +1,2922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JEE Preparation Syllabus Tracker & Study Timer</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Inter', sans-serif; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #090d16; }
+    ::-webkit-scrollbar-thumb { background: #263346; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #3b4d66; }
+
+    .sticky-th {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .custom-checkbox {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 17px;
+      height: 17px;
+      border: 1.8px solid #475569;
+      border-radius: 4px;
+      background-color: #0f172a;
+      display: inline-grid;
+      place-content: center;
+      cursor: pointer;
+      transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .custom-checkbox:hover {
+      border-color: #818cf8;
+      background-color: #1e293b;
+      transform: scale(1.1);
+    }
+    .custom-checkbox:checked {
+      background-color: #10b981;
+      border-color: #10b981;
+    }
+    .custom-checkbox:checked::before {
+      content: "";
+      width: 9px;
+      height: 6px;
+      border-left: 2px solid white;
+      border-bottom: 2px solid white;
+      transform: rotate(-45deg) translate(0.5px, -0.5px);
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fadeInUp {
+      animation: fadeInUp 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    button:active {
+      transform: scale(0.97);
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans antialiased h-screen w-screen overflow-hidden selection:bg-indigo-500 selection:text-white flex flex-col">
+
+  <!-- Top Global Header -->
+  <header class="flex-shrink-0 z-40 bg-slate-900/95 backdrop-blur-xl border-b border-slate-800/80 shadow-md shadow-black/20 px-3 sm:px-6 py-2.5">
+    <div class="w-full flex items-center justify-between gap-3">
+      
+      <!-- Daily Motivational Quote Widget -->
+      <div class="flex items-center gap-3 flex-1 min-w-0">
+        <div class="h-9 w-9 rounded-xl bg-gradient-to-tr from-amber-500 via-indigo-600 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20 font-black text-white text-base flex-shrink-0">
+          ⚡
+        </div>
+        <div class="min-w-0 flex-1">
+          <div class="flex items-center gap-2">
+            <span class="text-[10px] px-1.5 py-0.5 rounded font-bold uppercase bg-amber-500/15 text-amber-300 border border-amber-500/30 flex-shrink-0">Daily Spark</span>
+            <button onclick="refreshQuote()" title="New Quote" class="text-[10px] text-slate-400 hover:text-indigo-300 transition flex items-center gap-1 font-semibold flex-shrink-0">
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+              <span>Refresh</span>
+            </button>
+          </div>
+          <p id="motivationalQuoteText" class="text-xs sm:text-[13px] font-semibold text-slate-200 truncate italic mt-0.5">
+            "Discipline is choosing between what you want now and what you want most."
+          </p>
+        </div>
+      </div>
+
+      <!-- Header Tools (Right Side) -->
+      <div class="flex items-center gap-2 sm:gap-2.5 flex-shrink-0">
+        <div class="flex items-center gap-2 bg-slate-950/80 px-2.5 sm:px-3 py-1.5 rounded-xl border border-slate-800 text-xs shadow-inner">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="text-slate-400 hidden sm:inline">Today:</span>
+          <span id="headerTodaySolved" class="font-mono font-bold text-emerald-400">0 PYQs</span>
+        </div>
+
+        <button onclick="exportData()" title="Backup Progress" class="p-2 sm:px-3 sm:py-1.5 text-xs font-semibold rounded-lg bg-slate-800/90 hover:bg-slate-700 text-slate-300 border border-slate-700/80 transition flex items-center gap-1.5">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+          <span class="hidden sm:inline">Backup</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Fluid Main Window Area with Permanent Left Navigation Panel -->
+  <div class="flex-1 flex overflow-hidden w-full relative">
+    
+    <!-- Permanent Left-Side Navigation Panel -->
+    <aside class="w-16 sm:w-56 md:w-60 bg-slate-900/80 border-r border-slate-800/80 flex flex-col justify-between py-4 px-2 sm:px-3 flex-shrink-0 select-none overflow-y-auto">
+      <div class="space-y-1.5">
+        <div class="text-[10px] font-bold uppercase tracking-wider text-slate-500 px-2 pb-1.5 hidden sm:block border-b border-slate-800/60 mb-2">
+          Navigation
+        </div>
+
+        <!-- Tab 1: Syllabus Checklist -->
+        <button id="nav-btn-syllabus" onclick="switchSection('syllabus')" class="w-full flex items-center gap-3 px-2 sm:px-3 py-2.5 rounded-xl text-xs font-bold transition bg-indigo-600 text-white shadow-md shadow-indigo-600/30 text-left justify-center sm:justify-start">
+          <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          <span class="hidden sm:inline">Syllabus Checklist</span>
+        </button>
+
+        <!-- Tab 2: Daily PYQs & Targets -->
+        <button id="nav-btn-targets" onclick="switchSection('targets')" class="w-full flex items-center gap-3 px-2 sm:px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-800/80 transition text-left justify-center sm:justify-start">
+          <svg class="w-4 h-4 flex-shrink-0 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+          <span class="hidden sm:inline">Daily PYQs &amp; To-Do</span>
+        </button>
+
+        <!-- Tab 3: Timers & Ambience -->
+        <button id="nav-btn-timer" onclick="switchSection('timer')" class="w-full flex items-center gap-3 px-2 sm:px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-800/80 transition text-left justify-center sm:justify-start">
+          <svg class="w-4 h-4 flex-shrink-0 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <span class="hidden sm:inline">Timers &amp; Ambience</span>
+        </button>
+
+        <!-- Tab 4: Day-Wise PYQ Logs -->
+        <button id="nav-btn-history" onclick="switchSection('history')" class="w-full flex items-center gap-3 px-2 sm:px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-800/80 transition text-left justify-center sm:justify-start">
+          <svg class="w-4 h-4 flex-shrink-0 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          <span class="hidden sm:inline">Day-Wise Logs</span>
+          <span id="historyBadgeCount" class="text-[10px] font-mono px-1.5 py-0.2 rounded-full bg-slate-800 text-indigo-300 font-bold ml-auto hidden sm:inline">0</span>
+        </button>
+      </div>
+
+      <!-- Bottom Status Pill in Sidebar -->
+      <div class="hidden sm:block p-3 rounded-xl bg-slate-950/60 border border-slate-800/70 text-[11px] text-slate-400 mt-4">
+        <div class="font-bold text-slate-300 flex items-center gap-1.5 mb-1">
+          <span class="w-2 h-2 rounded-full bg-indigo-500"></span> JEE Mode
+        </div>
+        <p class="text-[10px] text-slate-500 leading-snug">Track daily targets, conquer backlogs &amp; aim for top ranks.</p>
+      </div>
+    </aside>
+
+    <!-- Main Content Area with Fluid Window Auto-Scrolling -->
+    <main class="flex-1 overflow-y-auto p-3.5 sm:p-6 lg:p-7 space-y-6">
+
+      <!-- ============================================================== -->
+      <!-- SECTION 1: SYLLABUS CHECKLIST                                  -->
+      <!-- ============================================================== -->
+      <section id="view-syllabus" class="space-y-5 max-w-7xl mx-auto w-full">
+        
+        <!-- Filter Controls Bar -->
+        <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+          
+          <!-- Subject Navigation Pills -->
+          <div class="flex items-center gap-1.5 bg-slate-950/80 p-1.5 rounded-xl border border-slate-800 overflow-x-auto">
+            <button onclick="setSubject('all')" id="sub-pill-all" class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition bg-indigo-600 text-white shadow-sm">All Subjects</button>
+            <button onclick="setSubject('math')" id="sub-pill-math" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition">Mathematics</button>
+            <button onclick="setSubject('phy')" id="sub-pill-phy" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition">Physics</button>
+            <button onclick="setSubject('chem')" id="sub-pill-chem" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition">Chemistry</button>
+          </div>
+
+          <!-- Secondary Filters & Search -->
+          <div class="flex items-center gap-2.5 flex-wrap">
+            <select id="classFilterSelect" onchange="applyFilters()" class="bg-slate-950 border border-slate-800 text-slate-300 text-xs rounded-xl px-3 py-2 outline-none focus:border-indigo-500 font-medium">
+              <option value="all">Class 11 + 12</option>
+              <option value="11">Class 11 Only</option>
+              <option value="12">Class 12 Only</option>
+            </select>
+
+            <button id="btn-toggle-oos" onclick="toggleOosFilter()" class="px-3 py-2 rounded-xl text-xs font-bold bg-slate-950 border border-slate-800 text-slate-400 hover:text-amber-400 flex items-center gap-1.5 transition">
+              <span id="oosIndicatorDot" class="w-2 h-2 rounded-full bg-slate-600"></span>
+              <span>Hide [OOS-M]</span>
+            </button>
+
+            <div class="relative flex-1 sm:w-60">
+              <input type="text" id="syllabusSearchInput" oninput="handleSearch(this.value)" placeholder="Search topic or chapter..." class="w-full bg-slate-950 border border-slate-800 text-slate-200 text-xs rounded-xl pl-8 pr-3 py-2 outline-none focus:border-indigo-500 placeholder-slate-500">
+              <svg class="w-3.5 h-3.5 text-slate-500 absolute left-2.5 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Overall Progress Snapshot Card -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-3.5">
+          <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-3.5">
+            <div class="text-[11px] font-bold uppercase text-slate-400">Total Completion</div>
+            <div class="flex items-baseline justify-between mt-1">
+              <span id="overallPercentText" class="text-xl font-mono font-extrabold text-white">0%</span>
+              <span id="overallTicksCount" class="text-xs text-slate-500 font-mono">0 / 0</span>
+            </div>
+            <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden mt-2">
+              <div id="overallProgressBar" class="h-full bg-gradient-to-r from-indigo-500 to-emerald-400 transition-all duration-300" style="width: 0%"></div>
+            </div>
+          </div>
+          <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-3.5">
+            <div class="text-[11px] font-bold uppercase text-blue-400">Mathematics</div>
+            <div class="flex items-baseline justify-between mt-1">
+              <span id="mathPercentText" class="text-xl font-mono font-extrabold text-blue-400">0%</span>
+              <span id="mathTicksCount" class="text-xs text-slate-500 font-mono">0 ticks</span>
+            </div>
+            <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden mt-2">
+              <div id="mathProgressBar" class="h-full bg-blue-500 transition-all duration-300" style="width: 0%"></div>
+            </div>
+          </div>
+          <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-3.5">
+            <div class="text-[11px] font-bold uppercase text-purple-400">Physics</div>
+            <div class="flex items-baseline justify-between mt-1">
+              <span id="phyPercentText" class="text-xl font-mono font-extrabold text-purple-400">0%</span>
+              <span id="phyTicksCount" class="text-xs text-slate-500 font-mono">0 ticks</span>
+            </div>
+            <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden mt-2">
+              <div id="phyProgressBar" class="h-full bg-purple-500 transition-all duration-300" style="width: 0%"></div>
+            </div>
+          </div>
+          <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-3.5">
+            <div class="text-[11px] font-bold uppercase text-emerald-400">Chemistry</div>
+            <div class="flex items-baseline justify-between mt-1">
+              <span id="chemPercentText" class="text-xl font-mono font-extrabold text-emerald-400">0%</span>
+              <span id="chemTicksCount" class="text-xs text-slate-500 font-mono">0 ticks</span>
+            </div>
+            <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden mt-2">
+              <div id="chemProgressBar" class="h-full bg-emerald-500 transition-all duration-300" style="width: 0%"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dynamic Syllabus Tables Render Container -->
+        <div id="syllabusCardsContainer" class="space-y-6">
+          <!-- Injected via JavaScript renderSyllabus() -->
+        </div>
+
+      </section>
+
+      <!-- ============================================================== -->
+      <!-- SECTION 2: DAILY TARGETS, PYQ ALLOCATOR & TO-DO HUB            -->
+      <!-- ============================================================== -->
+      <section id="view-targets" class="space-y-6 hidden max-w-7xl mx-auto w-full">
+        
+        <!-- Top Row: Daily PYQ Target Allocator + Interactive Donut Chart -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+          
+          <!-- Subject Question Allocator Cards (2 cols) -->
+          <div class="lg:col-span-2 bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-xl">
+            <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
+              <div>
+                <h3 class="text-base font-bold text-slate-100">Subject-Wise Daily PYQ Allocator</h3>
+                <p class="text-xs text-slate-400">Allocate how many questions you will solve today in each subject.</p>
+              </div>
+              <button onclick="resetDailyPyqs()" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition">
+                Reset Today's Solved
+              </button>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+              
+              <!-- Math Card -->
+              <div class="bg-slate-950/80 border border-blue-900/40 rounded-xl p-4 flex flex-col justify-between">
+                <div>
+                  <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold text-blue-400 uppercase tracking-wide">Mathematics</span>
+                    <span id="mathDailyPct" class="text-xs font-mono font-bold text-blue-300">0%</span>
+                  </div>
+                  <div class="mt-3 flex items-baseline justify-center gap-1 font-mono">
+                    <input type="number" id="inp-math-solved" onchange="handlePyqChange('math')" class="w-16 text-center text-2xl font-black bg-slate-900 border border-slate-700 rounded-lg py-1 text-white outline-none focus:border-blue-500" value="0" min="0">
+                    <span class="text-slate-500 font-bold text-lg">/</span>
+                    <input type="number" id="inp-math-target" onchange="handlePyqChange('math')" class="w-16 text-center text-lg font-bold bg-slate-900/50 border border-slate-800 rounded-lg py-1 text-slate-300 outline-none focus:border-blue-500" value="25" min="1">
+                  </div>
+                  <div class="text-[10px] text-center text-slate-500 mt-1">Solved / Allocated</div>
+                </div>
+
+                <div class="mt-4 pt-3 border-t border-slate-800/80 space-y-2">
+                  <div class="flex items-center justify-center gap-1.5">
+                    <button onclick="incPyq('math', -1)" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded text-xs font-bold">-1</button>
+                    <button onclick="incPyq('math', 1)" class="px-3 py-1 bg-blue-600 hover:bg-blue-500 text-white rounded text-xs font-bold">+1</button>
+                    <button onclick="incPyq('math', 5)" class="px-2 py-1 bg-blue-950 hover:bg-blue-900 text-blue-300 border border-blue-800 rounded text-xs font-bold">+5</button>
+                  </div>
+                  <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                    <div id="mathDailyBar" class="h-full bg-blue-500 transition-all duration-300" style="width: 0%"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Physics Card -->
+              <div class="bg-slate-950/80 border border-purple-900/40 rounded-xl p-4 flex flex-col justify-between">
+                <div>
+                  <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold text-purple-400 uppercase tracking-wide">Physics</span>
+                    <span id="phyDailyPct" class="text-xs font-mono font-bold text-purple-300">0%</span>
+                  </div>
+                  <div class="mt-3 flex items-baseline justify-center gap-1 font-mono">
+                    <input type="number" id="inp-phy-solved" onchange="handlePyqChange('phy')" class="w-16 text-center text-2xl font-black bg-slate-900 border border-slate-700 rounded-lg py-1 text-white outline-none focus:border-purple-500" value="0" min="0">
+                    <span class="text-slate-500 font-bold text-lg">/</span>
+                    <input type="number" id="inp-phy-target" onchange="handlePyqChange('phy')" class="w-16 text-center text-lg font-bold bg-slate-900/50 border border-slate-800 rounded-lg py-1 text-slate-300 outline-none focus:border-purple-500" value="30" min="1">
+                  </div>
+                  <div class="text-[10px] text-center text-slate-500 mt-1">Solved / Allocated</div>
+                </div>
+
+                <div class="mt-4 pt-3 border-t border-slate-800/80 space-y-2">
+                  <div class="flex items-center justify-center gap-1.5">
+                    <button onclick="incPyq('phy', -1)" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded text-xs font-bold">-1</button>
+                    <button onclick="incPyq('phy', 1)" class="px-3 py-1 bg-purple-600 hover:bg-purple-500 text-white rounded text-xs font-bold">+1</button>
+                    <button onclick="incPyq('phy', 5)" class="px-2 py-1 bg-purple-950 hover:bg-purple-900 text-purple-300 border border-purple-800 rounded text-xs font-bold">+5</button>
+                  </div>
+                  <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                    <div id="phyDailyBar" class="h-full bg-purple-500 transition-all duration-300" style="width: 0%"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Chemistry Card -->
+              <div class="bg-slate-950/80 border border-emerald-900/40 rounded-xl p-4 flex flex-col justify-between">
+                <div>
+                  <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold text-emerald-400 uppercase tracking-wide">Chemistry</span>
+                    <span id="chemDailyPct" class="text-xs font-mono font-bold text-emerald-300">0%</span>
+                  </div>
+                  <div class="mt-3 flex items-baseline justify-center gap-1 font-mono">
+                    <input type="number" id="inp-chem-solved" onchange="handlePyqChange('chem')" class="w-16 text-center text-2xl font-black bg-slate-900 border border-slate-700 rounded-lg py-1 text-white outline-none focus:border-emerald-500" value="0" min="0">
+                    <span class="text-slate-500 font-bold text-lg">/</span>
+                    <input type="number" id="inp-chem-target" onchange="handlePyqChange('chem')" class="w-16 text-center text-lg font-bold bg-slate-900/50 border border-slate-800 rounded-lg py-1 text-slate-300 outline-none focus:border-emerald-500" value="30" min="1">
+                  </div>
+                  <div class="text-[10px] text-center text-slate-500 mt-1">Solved / Allocated</div>
+                </div>
+
+                <div class="mt-4 pt-3 border-t border-slate-800/80 space-y-2">
+                  <div class="flex items-center justify-center gap-1.5">
+                    <button onclick="incPyq('chem', -1)" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded text-xs font-bold">-1</button>
+                    <button onclick="incPyq('chem', 1)" class="px-3 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded text-xs font-bold">+1</button>
+                    <button onclick="incPyq('chem', 5)" class="px-2 py-1 bg-emerald-950 hover:bg-emerald-900 text-emerald-300 border border-emerald-800 rounded text-xs font-bold">+5</button>
+                  </div>
+                  <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                    <div id="chemDailyBar" class="h-full bg-emerald-500 transition-all duration-300" style="width: 0%"></div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- SVG Donut Split Chart Card (1 col) -->
+          <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-xl flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <h3 class="text-sm font-bold text-slate-200">Target Distribution</h3>
+                <span id="chartTotalTargetPill" class="text-[11px] font-mono px-2 py-0.5 rounded-full bg-slate-800 text-indigo-300 font-bold">85 Qs</span>
+              </div>
+              <p class="text-xs text-slate-400">Subject split for today's workload.</p>
+            </div>
+
+            <!-- Donut Graphic Container -->
+            <div class="flex items-center justify-center my-3 relative">
+              <svg id="pyqDonutSvg" viewBox="0 0 100 100" class="w-36 h-36 transform -rotate-90">
+                <circle cx="50" cy="50" r="40" stroke="#1e293b" stroke-width="14" fill="transparent" />
+                <circle id="donutMathSlice" cx="50" cy="50" r="40" stroke="#3b82f6" stroke-width="14" fill="transparent" stroke-dasharray="0 251.3" stroke-dashoffset="0" />
+                <circle id="donutPhySlice" cx="50" cy="50" r="40" stroke="#a855f7" stroke-width="14" fill="transparent" stroke-dasharray="0 251.3" stroke-dashoffset="0" />
+                <circle id="donutChemSlice" cx="50" cy="50" r="40" stroke="#10b981" stroke-width="14" fill="transparent" stroke-dasharray="0 251.3" stroke-dashoffset="0" />
+              </svg>
+              <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                <span id="chartCenterSolved" class="text-2xl font-mono font-black text-white">0</span>
+                <span class="text-[9px] uppercase tracking-wider text-slate-400 font-bold">Solved</span>
+              </div>
+            </div>
+
+            <!-- Legend Pills -->
+            <div class="grid grid-cols-3 gap-2 text-center text-xs">
+              <div class="bg-blue-950/40 border border-blue-800/40 rounded-lg p-1.5">
+                <div class="text-[10px] text-blue-400 font-bold">MATH</div>
+                <div id="legendMathText" class="font-mono font-extrabold text-blue-200">25 (29%)</div>
+              </div>
+              <div class="bg-purple-950/40 border border-purple-800/40 rounded-lg p-1.5">
+                <div class="text-[10px] text-purple-400 font-bold">PHY</div>
+                <div id="legendPhyText" class="font-mono font-extrabold text-purple-200">30 (35%)</div>
+              </div>
+              <div class="bg-emerald-950/40 border border-emerald-800/40 rounded-lg p-1.5">
+                <div class="text-[10px] text-emerald-400 font-bold">CHEM</div>
+                <div id="legendChemText" class="font-mono font-extrabold text-emerald-200">30 (35%)</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Long-Term PYQ Projections and Forecast Calculator -->
+        <div class="bg-gradient-to-br from-slate-900 via-indigo-950/30 to-slate-900 border border-indigo-900/40 rounded-2xl p-5 shadow-xl">
+          <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
+            <div class="flex items-center gap-2">
+              <span class="text-xl">🔮</span>
+              <div>
+                <h3 class="text-sm font-bold text-indigo-200">Long-Term PYQ Projection Engine</h3>
+                <p class="text-xs text-slate-400">Estimated accumulation if you consistently maintain today's target pace.</p>
+              </div>
+            </div>
+            <div class="text-xs font-mono bg-slate-950/80 px-3 py-1.5 rounded-lg border border-slate-800 text-indigo-300">
+              Exam Countdown: <span id="projectionCountdownDays" class="font-bold text-white">--</span> Days Remaining
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
+            <div class="bg-slate-950/70 border border-slate-800 rounded-xl p-3.5 text-center">
+              <div class="text-[10px] font-bold uppercase text-slate-400">Daily Target</div>
+              <div id="projPaceDaily" class="text-2xl font-mono font-black text-white mt-1">85</div>
+              <div class="text-[10px] text-slate-500 mt-0.5">questions / day</div>
+            </div>
+            <div class="bg-slate-950/70 border border-slate-800 rounded-xl p-3.5 text-center">
+              <div class="text-[10px] font-bold uppercase text-indigo-400">Weekly Forecast (7D)</div>
+              <div id="projPaceWeekly" class="text-2xl font-mono font-black text-indigo-300 mt-1">595</div>
+              <div class="text-[10px] text-slate-500 mt-0.5">questions / week</div>
+            </div>
+            <div class="bg-slate-950/70 border border-slate-800 rounded-xl p-3.5 text-center">
+              <div class="text-[10px] font-bold uppercase text-purple-400">Monthly Forecast (30D)</div>
+              <div id="projPaceMonthly" class="text-2xl font-mono font-black text-purple-300 mt-1">2,550</div>
+              <div class="text-[10px] text-slate-500 mt-0.5">questions / month</div>
+            </div>
+            <div class="bg-slate-950/70 border border-amber-900/40 rounded-xl p-3.5 text-center relative overflow-hidden">
+              <div class="text-[10px] font-bold uppercase text-amber-400">Total Till Exam Date</div>
+              <div id="projPaceExam" class="text-2xl font-mono font-black text-amber-300 mt-1">--</div>
+              <div id="projPaceBreakdown" class="text-[10px] text-amber-500/80 font-mono mt-0.5">Math: 0 • Phy: 0 • Chem: 0</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Priority To-Do List Hub -->
+        <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
+          <div class="flex items-center justify-between flex-wrap gap-2">
+            <div>
+              <h3 class="text-base font-bold text-slate-100">Priority Study Tasks &amp; Topic To-Do</h3>
+              <p class="text-xs text-slate-400">Add custom targets or instantly pick syllabus subtopics to conquer today.</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="clearDoneTodos()" class="text-xs text-slate-400 hover:text-white px-2.5 py-1 rounded bg-slate-800 border border-slate-700">Clear Completed</button>
+            </div>
+          </div>
+
+          <!-- Add Task Form -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3 bg-slate-950/70 p-3.5 rounded-xl border border-slate-800">
+            <div class="flex gap-2">
+              <input type="text" id="customTodoInput" onkeydown="if(event.key==='Enter') addCustomTodo()" placeholder="Write custom task (e.g., Revise Short Notes 2hr)..." class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-200 outline-none focus:border-indigo-500">
+              <button onclick="addCustomTodo()" class="px-3.5 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs">Add</button>
+            </div>
+
+            <div class="flex gap-2">
+              <select id="syllabusTopicDropdown" class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-2 text-xs text-slate-200 outline-none focus:border-purple-500">
+                <option value="">-- Or Pick a Syllabus Subtopic --</option>
+              </select>
+              <button onclick="addSyllabusTodo()" class="px-3.5 py-2 rounded-lg bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs">Queue Topic</button>
+            </div>
+          </div>
+
+          <!-- To-Do List Container -->
+          <ul id="todoItemsList" class="space-y-2 max-h-72 overflow-y-auto pr-1">
+            <!-- Injected via JavaScript -->
+          </ul>
+        </div>
+
+      </section>
+
+      <!-- ============================================================== -->
+      <!-- SECTION 3: FOCUS TIMERS, COUNTDOWNS & AMBIENT AUDIO            -->
+      <!-- ============================================================== -->
+      <section id="view-timer" class="space-y-6 hidden max-w-7xl mx-auto w-full">
+        
+        <!-- Live Countdowns Row (JEE Main + Custom Milestone) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+          
+          <!-- JEE Main Exam Countdown -->
+          <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-xl flex flex-col justify-between">
+            <div class="flex items-center justify-between flex-wrap gap-2">
+              <div>
+                <span class="text-[10px] font-bold uppercase tracking-wider text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/20">Target Exam</span>
+                <h3 class="text-base font-bold text-slate-100 mt-1">JEE Main Countdown</h3>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <select id="jeeMainYearSelect" onchange="setJeeMainTargetDate(this.value)" class="bg-slate-950 border border-slate-700 text-slate-300 text-xs rounded-lg px-2 py-1 outline-none font-mono">
+                  <option value="2027-01-24">Jan 24, 2027 (Session 1)</option>
+                  <option value="2026-01-24">Jan 24, 2026</option>
+                  <option value="2025-01-22">Jan 22, 2025</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-4 gap-2 my-4">
+              <div class="bg-slate-950/80 border border-slate-800 rounded-xl py-3 text-center">
+                <div id="cd-main-days" class="text-2xl sm:text-3xl font-mono font-extrabold text-blue-400">0</div>
+                <div class="text-[9px] uppercase tracking-wider text-slate-500 font-bold mt-1">Days</div>
+              </div>
+              <div class="bg-slate-950/80 border border-slate-800 rounded-xl py-3 text-center">
+                <div id="cd-main-hours" class="text-2xl sm:text-3xl font-mono font-extrabold text-slate-200">00</div>
+                <div class="text-[9px] uppercase tracking-wider text-slate-500 font-bold mt-1">Hours</div>
+              </div>
+              <div class="bg-slate-950/80 border border-slate-800 rounded-xl py-3 text-center">
+                <div id="cd-main-mins" class="text-2xl sm:text-3xl font-mono font-extrabold text-slate-200">00</div>
+                <div class="text-[9px] uppercase tracking-wider text-slate-500 font-bold mt-1">Mins</div>
+              </div>
+              <div class="bg-slate-950/80 border border-slate-800 rounded-xl py-3 text-center">
+                <div id="cd-main-secs" class="text-2xl sm:text-3xl font-mono font-extrabold text-emerald-400">00</div>
+                <div class="text-[9px] uppercase tracking-wider text-slate-500 font-bold mt-1">Secs</div>
+              </div>
+            </div>
+
+            <div class="text-[11px] text-slate-500 text-center font-mono" id="jeeMainDateDisplayStatus">
+              Target Reference: 24 January 2027
+            </div>
+          </div>
+
+          <!-- Custom Target Date Countdown -->
+          <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-xl flex flex-col justify-between">
+            <div class="flex items-center justify-between">
+              <div>
+                <span class="text-[10px] font-bold uppercase tracking-wider text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded border border-purple-500/20">Custom Milestone</span>
+                <h3 class="text-base font-bold text-slate-100 mt-1">Personal Mock Test / Goal</h3>
+              </div>
+              <input type="date" id="customTargetDateInput" onchange="setCustomDate(this.value)" class="bg-slate-950 border border-slate-700 text-slate-300 text-xs rounded-lg px-2.5 py-1 outline-none focus:border-purple-500">
+            </div>
+
+            <div class="grid grid-cols-4 gap-2 my-4">
+              <div class="bg-slate-950/80 border border-slate-800 rounded-xl py-3 text-center">
+                <div id="cd-cust-days" class="text-2xl sm:text-3xl font-mono font-extrabold text-purple-400">0</div>
+                <div class="text-[9px] uppercase tracking-wider text-slate-500 font-bold mt-1">Days</div>
+              </div>
+              <div class="bg-slate-950/80 border border-slate-800 rounded-xl py-3 text-center">
+                <div id="cd-cust-hours" class="text-2xl sm:text-3xl font-mono font-extrabold text-slate-200">00</div>
+                <div class="text-[9px] uppercase tracking-wider text-slate-500 font-bold mt-1">Hours</div>
+              </div>
+              <div class="bg-slate-950/80 border border-slate-800 rounded-xl py-3 text-center">
+                <div id="cd-cust-mins" class="text-2xl sm:text-3xl font-mono font-extrabold text-slate-200">00</div>
+                <div class="text-[9px] uppercase tracking-wider text-slate-500 font-bold mt-1">Mins</div>
+              </div>
+              <div class="bg-slate-950/80 border border-slate-800 rounded-xl py-3 text-center">
+                <div id="cd-cust-secs" class="text-2xl sm:text-3xl font-mono font-extrabold text-purple-300">00</div>
+                <div class="text-[9px] uppercase tracking-wider text-slate-500 font-bold mt-1">Secs</div>
+              </div>
+            </div>
+
+            <div class="text-[11px] text-slate-500 text-center font-mono" id="customDateDisplayStatus">
+              Select any upcoming mock or revision deadline above.
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Target Study Session Timer + Time Remaining for the Day -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+          
+          <!-- Target Study Session Timer -->
+          <div class="bg-slate-900/90 border border-indigo-900/50 rounded-2xl p-5 shadow-xl flex flex-col justify-between">
+            <div class="flex items-center justify-between flex-wrap gap-2">
+              <div>
+                <span class="text-[10px] font-bold uppercase tracking-wider text-indigo-400 bg-indigo-500/10 px-2 py-0.5 rounded border border-indigo-500/20">Target Study Session</span>
+                <h3 class="text-base font-bold text-slate-100 mt-1">Deep Work Block Timer</h3>
+              </div>
+              <div class="flex items-center gap-1">
+                <button onclick="setSessionTargetMinutes(45)" class="px-2 py-1 text-xs rounded bg-slate-950 border border-slate-800 hover:border-indigo-500 font-mono text-slate-300">45m</button>
+                <button onclick="setSessionTargetMinutes(60)" class="px-2 py-1 text-xs rounded bg-slate-950 border border-slate-800 hover:border-indigo-500 font-mono text-slate-300">1h</button>
+                <button onclick="setSessionTargetMinutes(90)" class="px-2 py-1 text-xs rounded bg-indigo-600/30 border border-indigo-500 font-mono text-indigo-300 font-bold">1.5h</button>
+                <button onclick="setSessionTargetMinutes(120)" class="px-2 py-1 text-xs rounded bg-slate-950 border border-slate-800 hover:border-indigo-500 font-mono text-slate-300">2h</button>
+                <button onclick="setSessionTargetMinutes(180)" class="px-2 py-1 text-xs rounded bg-slate-950 border border-slate-800 hover:border-indigo-500 font-mono text-slate-300">3h</button>
+              </div>
+            </div>
+
+            <!-- Big Session Clock -->
+            <div class="text-center my-4">
+              <div id="sessionTimerDisplay" class="text-5xl sm:text-6xl font-mono font-black text-white tracking-tight">01:30:00</div>
+              <div id="sessionTimerStatus" class="text-xs text-indigo-400 uppercase font-semibold tracking-wider mt-2">Target Block: 90 Minutes</div>
+              <div class="w-full bg-slate-950 h-2 rounded-full overflow-hidden mt-3 border border-slate-800">
+                <div id="sessionTimerProgressBar" class="h-full bg-gradient-to-r from-indigo-500 to-purple-500 transition-all duration-300" style="width: 0%"></div>
+              </div>
+            </div>
+
+            <!-- Session Controls -->
+            <div class="flex items-center justify-between flex-wrap gap-2 pt-2 border-t border-slate-800/80">
+              <div class="flex items-center gap-2">
+                <input type="number" id="customSessionMinsInput" placeholder="Min" class="w-16 bg-slate-950 border border-slate-800 rounded-lg px-2 py-1.5 text-xs text-center font-mono text-white outline-none focus:border-indigo-500" value="90" min="5" max="600">
+                <button onclick="applyCustomSessionTarget()" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200">Set Custom</button>
+              </div>
+              <div class="flex items-center gap-2">
+                <button id="btnSessionToggle" onclick="toggleSessionTimer()" class="px-5 py-1.5 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-500 text-white shadow-md shadow-indigo-600/30 transition">
+                  Start Block
+                </button>
+                <button onclick="resetSessionTimer()" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 transition">
+                  Reset
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Time Remaining for the Day Countdown -->
+          <div class="bg-slate-900/90 border border-amber-900/40 rounded-2xl p-5 shadow-xl flex flex-col justify-between">
+            <div class="flex items-center justify-between">
+              <div>
+                <span class="text-[10px] font-bold uppercase tracking-wider text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">Daily Urgency Clock</span>
+                <h3 class="text-base font-bold text-slate-100 mt-1">Time Remaining for Today</h3>
+              </div>
+              <span class="text-2xl animate-pulse">⏳</span>
+            </div>
+
+            <div class="grid grid-cols-3 gap-2 my-4">
+              <div class="bg-slate-950/80 border border-slate-800 rounded-xl py-3 text-center">
+                <div id="day-rem-hours" class="text-3xl font-mono font-extrabold text-amber-300">--</div>
+                <div class="text-[9px] uppercase tracking-wider text-slate-500 font-bold mt-1">Hours Left</div>
+              </div>
+              <div class="bg-slate-950/80 border border-slate-800 rounded-xl py-3 text-center">
+                <div id="day-rem-mins" class="text-3xl font-mono font-extrabold text-slate-200">--</div>
+                <div class="text-[9px] uppercase tracking-wider text-slate-500 font-bold mt-1">Mins Left</div>
+              </div>
+              <div class="bg-slate-950/80 border border-slate-800 rounded-xl py-3 text-center">
+                <div id="day-rem-secs" class="text-3xl font-mono font-extrabold text-amber-400">--</div>
+                <div class="text-[9px] uppercase tracking-wider text-slate-500 font-bold mt-1">Secs Left</div>
+              </div>
+            </div>
+
+            <div>
+              <div class="flex items-center justify-between text-[11px] font-mono text-slate-400 mb-1">
+                <span>Day Passed: <span id="dayPassedPercent" class="text-amber-300 font-bold">0%</span></span>
+                <span>Midnight Cutoff: 23:59:59</span>
+              </div>
+              <div class="w-full bg-slate-950 h-2 rounded-full overflow-hidden border border-slate-800">
+                <div id="dayRemainingBar" class="h-full bg-gradient-to-r from-amber-500 to-red-500 transition-all duration-300" style="width: 0%"></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Pomodoro Stopwatch + Ambient Sound Generator -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+          
+          <!-- Study Pomodoro & Stopwatch -->
+          <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-xl flex flex-col justify-between">
+            <div class="flex items-center justify-between">
+              <h3 class="text-sm font-bold text-slate-200">Study Stopwatch &amp; Pomodoro</h3>
+              <div class="flex items-center gap-1 bg-slate-950 p-1 rounded-lg border border-slate-800 text-xs">
+                <button onclick="setTimerMode('stopwatch')" id="btn-mode-sw" class="px-2 py-0.5 rounded font-bold bg-indigo-600 text-white">Stopwatch</button>
+                <button onclick="setTimerMode('pomo')" id="btn-mode-pomo" class="px-2 py-0.5 rounded font-semibold text-slate-400">25m Pomo</button>
+                <button onclick="setTimerMode('pomo50')" id="btn-mode-pomo50" class="px-2 py-0.5 rounded font-semibold text-slate-400">50m Deep</button>
+              </div>
+            </div>
+
+            <!-- Big Clock Face -->
+            <div class="text-center my-6">
+              <div id="timerDisplay" class="text-5xl sm:text-6xl font-mono font-black text-white tracking-tight">00:00:00</div>
+              <div id="timerStatusLabel" class="text-xs text-indigo-400 uppercase font-semibold tracking-wider mt-2">Ready to Focus</div>
+            </div>
+
+            <!-- Timer Controls -->
+            <div class="flex items-center justify-center gap-3">
+              <button id="btnTimerToggle" onclick="toggleTimer()" class="px-6 py-2.5 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/30 transition">
+                Start Session
+              </button>
+              <button onclick="resetTimer()" class="px-4 py-2.5 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 transition">
+                Reset
+              </button>
+            </div>
+          </div>
+
+          <!-- Web Audio Offline Synthesizer (White/Pink/Brown/40Hz) -->
+          <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-xl flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between">
+                <h3 class="text-sm font-bold text-slate-200">Ambient Background Noise Studio</h3>
+                <span class="text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20 font-mono">100% Offline</span>
+              </div>
+              <p class="text-xs text-slate-400 mt-1">Synthesized directly in your browser using the Web Audio API.</p>
+            </div>
+
+            <!-- Noise Buttons -->
+            <div class="grid grid-cols-2 gap-2.5 my-4">
+              <button onclick="toggleAudioNoise('white')" id="btn-sound-white" class="p-3 rounded-xl border border-slate-800 bg-slate-950/80 hover:bg-slate-800 text-xs font-bold text-slate-300 transition text-left flex items-center justify-between">
+                <span>⚪ White Noise</span>
+                <span class="text-[10px] text-slate-500">Static</span>
+              </button>
+              <button onclick="toggleAudioNoise('pink')" id="btn-sound-pink" class="p-3 rounded-xl border border-slate-800 bg-slate-950/80 hover:bg-slate-800 text-xs font-bold text-slate-300 transition text-left flex items-center justify-between">
+                <span>🌸 Pink Noise</span>
+                <span class="text-[10px] text-slate-500">Rain/Waterfall</span>
+              </button>
+              <button onclick="toggleAudioNoise('brown')" id="btn-sound-brown" class="p-3 rounded-xl border border-slate-800 bg-slate-950/80 hover:bg-slate-800 text-xs font-bold text-slate-300 transition text-left flex items-center justify-between">
+                <span>🟤 Brown (Airplane)</span>
+                <span class="text-[10px] text-slate-500">Cabin Rumbling</span>
+              </button>
+              <button onclick="toggleAudioNoise('binaural')" id="btn-sound-binaural" class="p-3 rounded-xl border border-slate-800 bg-slate-950/80 hover:bg-slate-800 text-xs font-bold text-slate-300 transition text-left flex items-center justify-between">
+                <span>🧠 40Hz Gamma</span>
+                <span class="text-[10px] text-slate-500">Focus Wave</span>
+              </button>
+            </div>
+
+            <!-- Volume Slider -->
+            <div class="bg-slate-950/80 p-3 rounded-xl border border-slate-800 flex items-center gap-3">
+              <span class="text-xs text-slate-400 font-semibold flex-shrink-0">Volume</span>
+              <input type="range" id="audioVolumeSlider" min="0" max="1" step="0.05" value="0.4" oninput="setAudioVolume(this.value)" class="w-full accent-indigo-500">
+              <span id="audioVolumeLabel" class="text-xs font-mono text-slate-400 w-8 text-right">40%</span>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- ============================================================== -->
+      <!-- SECTION 4: DAY-TO-DAY HISTORY & ACTIVITY LOG                   -->
+      <!-- ============================================================== -->
+      <section id="view-history" class="space-y-6 hidden max-w-7xl mx-auto w-full">
+        
+        <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-xl">
+          <div class="flex items-center justify-between flex-wrap gap-3">
+            <div>
+              <h3 class="text-base font-bold text-slate-100">Day-Wise Study &amp; PYQ Records</h3>
+              <p class="text-xs text-slate-400">Strict day-to-day record of daily targets set and questions solved.</p>
+            </div>
+
+            <!-- Date Picker for Specific Day Lookup -->
+            <div class="flex items-center gap-2">
+              <span class="text-xs text-slate-400">Jump to Date:</span>
+              <input type="date" id="historyDateInput" onchange="loadDateHistory(this.value)" class="bg-slate-950 border border-slate-700 text-slate-200 text-xs rounded-xl px-3 py-1.5 outline-none focus:border-indigo-500 font-mono">
+            </div>
+          </div>
+
+          <!-- Highlight Card for Selected Day -->
+          <div id="selectedDateSummaryBox" class="mt-4 bg-slate-950/80 border border-slate-800 rounded-xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div>
+              <div class="text-[10px] font-bold uppercase tracking-wider text-indigo-400" id="histDateBadge">SELECTED DATE</div>
+              <h4 class="text-lg font-bold text-white mt-0.5" id="histDateHeading">Today</h4>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="text-center px-4 py-2 rounded-lg bg-slate-900 border border-slate-800">
+                <div class="text-[10px] text-slate-400 uppercase font-bold">Target Set</div>
+                <div class="text-lg font-mono font-bold text-slate-200" id="histDateTargetVal">0</div>
+              </div>
+              <div class="text-center px-4 py-2 rounded-lg bg-slate-900 border border-slate-800">
+                <div class="text-[10px] text-emerald-400 uppercase font-bold">Solved</div>
+                <div class="text-lg font-mono font-extrabold text-emerald-400" id="histDateSolvedVal">0</div>
+              </div>
+              <div class="text-center px-4 py-2 rounded-lg bg-slate-900 border border-slate-800">
+                <div class="text-[10px] text-indigo-400 uppercase font-bold">Score</div>
+                <div class="text-lg font-mono font-bold text-indigo-300" id="histDatePercentVal">0%</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Past Dates Chronological Feed -->
+          <div class="mt-6">
+            <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">Chronological Daily Logs</h4>
+            <div class="overflow-x-auto rounded-xl border border-slate-800">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-slate-950 text-slate-400 uppercase font-semibold text-[10px] tracking-wider border-b border-slate-800">
+                  <tr>
+                    <th class="py-3 px-4">Date</th>
+                    <th class="py-3 px-3 text-center">Daily Target</th>
+                    <th class="py-3 px-3 text-center">PYQs Solved</th>
+                    <th class="py-3 px-3 text-center">Subject Split (M / P / C)</th>
+                    <th class="py-3 px-3 text-center">Completion Rate</th>
+                  </tr>
+                </thead>
+                <tbody id="historyLogTableBody" class="divide-y divide-slate-800/60 bg-slate-900/40">
+                  <!-- Injected via JavaScript -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Non-Intrusive Floating Toast Notification -->
+  <div id="toastNotification" class="fixed bottom-5 right-5 z-50 transform translate-y-16 opacity-0 transition-all duration-300 bg-slate-900 border border-indigo-500 text-slate-100 text-xs font-semibold px-4 py-2.5 rounded-xl shadow-2xl flex items-center gap-2 pointer-events-none">
+    <span id="toastIcon">✨</span>
+    <span id="toastMsg">Progress saved!</span>
+  </div>
+
+  <script>
+    /* ========================================================================= */
+    /* 1. SYLLABUS DATA DEFINITIONS (Maths, Physics, Chemistry - Class 11 & 12)  */
+    /* ========================================================================= */
+    const syllabusDatabase = [
+      // ---------------- MATHEMATICS CLASS 11 ----------------
+      {
+        subject: 'math',
+        subjectName: 'Mathematics',
+        classNum: 11,
+        chapterId: 'm11_sets',
+        chapterName: '1. Sets',
+        specialColName: 'NCERT Qs',
+        topics: [
+          { num: 'T1', title: 'Sets, Types of Sets, Subsets, Power Set, Operations on Sets', oos: false },
+          { num: 'T2', title: 'Venn Diagrams, De Morgan\'s Law, Practical Problems on Sets', oos: false }
+        ]
+      },
+      {
+        subject: 'math',
+        subjectName: 'Mathematics',
+        classNum: 11,
+        chapterId: 'm11_rel_fn',
+        chapterName: '2. Relations and Functions',
+        specialColName: 'NCERT Qs',
+        topics: [
+          { num: 'T1', title: 'Relations, Domain, Codomain & Range of Relations and Functions', oos: false },
+          { num: 'T2', title: 'Even/Odd Functions, Modulus, GIF, Periodic, Equal Functions', oos: false }
+        ]
+      },
+      {
+        subject: 'math',
+        subjectName: 'Mathematics',
+        classNum: 11,
+        chapterId: 'm11_trig',
+        chapterName: '3. Trigonometric Functions',
+        specialColName: 'NCERT Qs',
+        topics: [
+          { num: 'T1', title: 'Circular System, Trigonometric Ratios, Allied Angles', oos: false },
+          { num: 'T2', title: 'Trigonometric Identities, Max/Min Values of Expressions', oos: false },
+          { num: 'T3', title: 'Principal Solution of Trigonometric Equation, Properties of Triangle', oos: true },
+          { num: 'T4', title: 'General Solutions [Preserved for JEE Advanced]', oos: true, adv: true }
+        ]
+      },
+      {
+        subject: 'math',
+        subjectName: 'Mathematics',
+        classNum: 11,
+        chapterId: 'm11_complex',
+        chapterName: '4. Complex Numbers and Quadratic Equations',
+        specialColName: 'NCERT Qs',
+        topics: [
+          { num: 'T1', title: 'Integral Powers of i, Conjugate, Modulus and Amplitude/Argument', oos: false },
+          { num: 'T2', title: 'Square Root & Polar/Euler Representation of Complex Numbers', oos: true },
+          { num: 'T3', title: 'Quadratic Equations, Relation of Roots & Coefficients, Nature of Roots', oos: false },
+          { num: 'T4', title: 'Geometrical Representation of Complex Numbers, Cube Roots of Unity', oos: false },
+          { num: 'T5', title: 'Common Roots, Min/Max Quadratic Values, Quadratic Inequalities', oos: false }
+        ]
+      },
+      {
+        subject: 'math',
+        subjectName: 'Mathematics',
+        classNum: 11,
+        chapterId: 'm11_pnc',
+        chapterName: '5. Permutations and Combinations',
+        specialColName: 'NCERT Qs',
+        topics: [
+          { num: 'T1', title: 'Fundamental Principle of Counting, Factorials, Permutations', oos: false },
+          { num: 'T2', title: 'Combinations, Division & Distribution, Dearrangement, Sum of Numbers', oos: false }
+        ]
+      },
+      {
+        subject: 'math',
+        subjectName: 'Mathematics',
+        classNum: 11,
+        chapterId: 'm11_binomial',
+        chapterName: '6. Binomial Theorem',
+        specialColName: 'NCERT Qs',
+        topics: [
+          { num: 'T1', title: 'Binomial Theorem for Positive Integral Index, General Term', oos: false },
+          { num: 'T2', title: 'Middle Term, Independent Term, Greatest Binomial Coefficient', oos: false },
+          { num: 'T3', title: 'Properties of Binomial Coefficients (Series Summations)', oos: true },
+          { num: 'T4', title: 'Multinomial Theorem & Infinite Series [For JEE Advanced]', oos: true, adv: true }
+        ]
+      },
+      {
+        subject: 'math',
+        subjectName: 'Mathematics',
+        classNum: 11,
+        chapterId: 'm11_seq',
+        chapterName: '7. Sequences and Series',
+        specialColName: 'NCERT Qs',
+        topics: [
+          { num: 'T1', title: 'Arithmetic Progression (AP)', oos: false },
+          { num: 'T2', title: 'Geometric Progression (GP)', oos: false },
+          { num: 'T3', title: 'Relation Between AM and GM', oos: false },
+          { num: 'T4', title: 'Special Series (Sum of n, n^2, n^3)', oos: true },
+          { num: 'T5', title: 'Arithmetico-Geometric Sequence (AGS) [For JEE Advanced]', oos: true, adv: true }
+        ]
+      },
+      {
+        subject: 'math',
+        subjectName: 'Mathematics',
+        classNum: 11,
+        chapterId: 'm11_lines',
+        chapterName: '8. Straight Lines',
+        specialColName: 'NCERT Qs',
+        topics: [
+          { num: 'T1', title: 'Distance, Section Formula, Locus, Slope, Parallel/Perpendicular Lines', oos: false },
+          { num: 'T2', title: 'Various Forms of Equations of a Line', oos: false },
+          { num: 'T3', title: 'Distance Between Lines, Angle, Foot of Perpendicular, Position of Point', oos: false },
+          { num: 'T4', title: 'Pair of Straight Lines [For JEE Advanced]', oos: true, adv: true }
+        ]
+      },
+      {
+        subject: 'math',
+        subjectName: 'Mathematics',
+        classNum: 11,
+        chapterId: 'm11_conics',
+        chapterName: '9. Conic Sections',
+        specialColName: 'NCERT Qs',
+        topics: [
+          { num: 'T1', title: 'Circles (Standard equations, General form, Radius, Center)', oos: false },
+          { num: 'T2', title: 'Parabola (Standard form, Focus, Directrix, Latus Rectum)', oos: false },
+          { num: 'T3', title: 'Ellipse (Standard equations, Eccentricity, Foci, Vertices)', oos: false },
+          { num: 'T4', title: 'Hyperbola (Standard forms, Asymptotes, Eccentricity)', oos: false },
+          { num: 'T5', title: 'Chord and Focal Chord of Conics', oos: false },
+          { num: 'T6', title: 'Tangents and Normals to Conics [For JEE Advanced]', oos: true, adv: true }
+        ]
+      },
+      {
+        subject: 'math',
+        subjectName: 'Mathematics',
+        classNum: 11,
+        chapterId: 'm11_limits',
+        chapterName: '10. Limits and Derivatives',
+        specialColName: 'NCERT Qs',
+        topics: [
+          { num: 'T1', title: 'Limit of a Function, LHL, RHL, Factorisation, Rationalisation', oos: false },
+          { num: 'T2', title: 'L\'Hospital\'s Rule, 1^infinity form, Expansion Methods', oos: false },
+          { num: 'T3', title: 'Derivatives of Polynomial & Trig Functions, Product & Quotient Rule', oos: false }
+        ]
+      },
+      {
+        subject: 'math',
+        subjectName: 'Mathematics',
+        classNum: 11,
+        chapterId: 'm11_stats',
+        chapterName: '11. Statistics',
+        specialColName: 'NCERT Qs',
+        topics: [
+          { num: 'T1', title: 'Mean, Median and Mode', oos: false },
+          { num: 'T2', title: 'Measures of Dispersion, Mean Deviation, Variance and Std Dev', oos: false }
+        ]
+      },
+      {
+        subject: 'math',
+        subjectName: 'Mathematics',
+        classNum: 11,
+        chapterId: 'm11_prob',
+        chapterName: '12. Probability (Class XI)',
+        specialColName: 'NCERT Qs',
+        topics: [
+          { num: 'T1', title: 'Random Experiments, Sample Space, Mutually Exclusive & Exhaustive Events', oos: false },
+          { num: 'T2', title: 'Odds in Favour & Against, Addition Theorem of Probability', oos: false }
+        ]
+      },
+      {
+        subject: 'math',
+        subjectName: 'Mathematics',
+        classNum: 11,
+        chapterId: 'm11_ineq',
+        chapterName: '13. Linear Inequalities',
+        specialColName: 'NCERT Qs',
+        topics: [
+          { num: 'T1', title: 'Linear Inequalities in One and Two Variables, Solution of Systems', oos: false }
+        ]
+      },
+
+      // ---------------- MATHEMATICS CLASS 12 ----------------
+      {
+        subject: 'math',
+        subjectName: 'Mathematics',
+        classNum: 12,
+        chapterId: 'm12_rel_fn',
+        chapterName: '1. Relations and Functions (Class XII)',
+        specialColName: 'NCERT Qs',
+        topics: [
+          { num: 'T1', title: 'Types of Relations (Equivalence) & Types of Functions (One-one, Onto)', oos: false },
+          { num: 'T2', title: 'Composite Functions and Invertible Functions', oos: true }
+        ]
+      },
+      {
+        subject: 'math',
+        subjectName: 'Mathematics',
+        classNum: 12,
+        chapterId: 'm12_itf',
+        chapterName: '2. Inverse Trigonometric Functions',
+        specialColName: 'NCERT Qs',
+        topics: [
+          { num: 'T1', title: 'Domain, Range, Principal Value Branches of Inverse Trig Functions', oos: false },
+          { num: 'T2', title: 'Properties of Inverse Trigonometric Functions', oos: true }
+        ]
+      },
+      {
+        subject: 'math',
+        subjectName: 'Mathematics',
+        classNum: 12,
+        chapterId: 'm12_matrices',
+        chapterName: '3. Matrices',
+        specialColName: 'NCERT Qs',
+        topics: [
+          { num: 'T1', title: 'Types of Matrices, Matrix Operations, Multiplication Rules', oos: false },
+          { num: 'T2', title: 'Transpose, Symmetric & Skew-Symmetric Matrices, Invertible Matrices', oos: false }
+        ]
+      },
+      {
+        subject: 'math',
+        subjectName: 'Mathematics',
+        classNum: 12,
+        chapterId: 'm12_det',
+        chapterName: '4. Determinants',
+        specialColName: 'NCERT Qs',
+        topics: [
+          { num: 'T1', title: 'Determinant of Matrices, Singular/Non-singular, Area of Triangle', oos: false },
+          { num: 'T2', title: 'Minors, Cofactors, Adjoint and Inverse of a Matrix', oos: false },
+          { num: 'T3', title: 'Solution of System of Linear Equations', oos: false },
+          { num: 'T4', title: 'Cramer\'s Rule', oos: false }
+        ]
+      },
+      {
+        subject: 'math',
+        subjectName: 'Mathematics',
+        classNum: 12,
+        chapterId: 'm12_cont_diff',
+        chapterName: '5. Continuity and Differentiability',
+        specialColName: 'NCERT Qs',
+        topics: [
+          { num: 'T1', title: 'Continuity of Functions', oos: false },
+          { num: 'T2', title: 'Differentiability of Functions', oos: false },
+          { num: 'T3', title: 'Chain Rule, Implicit, Parametric, Logarithmic and Exponential Differentiation', oos: false },
+          { num: 'T4', title: 'Differentiation of Infinite Series, Second Order Derivatives', oos: false }
+        ]
+      },
+      {
+        subject: 'math',
+        subjectName: 'Mathematics',
+        classNum: 12,
+        chapterId: 'm12_aod',
+        chapterName: '6. Applications of Derivatives',
+        specialColName: 'NCERT Qs',
+        topics: [
+          { num: 'T1', title: 'Rate of Change of Quantities', oos: false },
+          { num: 'T2', title: 'Strictly Increasing and Decreasing Functions', oos: false },
+          { num: 'T3', title: 'Maxima and Minima, First & Second Derivative Tests', oos: false },
+          { num: 'T4', title: 'Tangents & Normals, Rolle\'s Theorem and LMVT', oos: true, adv: true }
+        ]
+      },
+      {
+        subject: 'math',
+        subjectName: 'Mathematics',
+        classNum: 12,
+        chapterId: 'm12_integrals',
+        chapterName: '7. Integrals',
+        specialColName: 'NCERT Qs',
+        topics: [
+          { num: 'T1', title: 'Standard Integrals, Substitution Method, Integration by Parts', oos: false },
+          { num: 'T2', title: 'Special Integrals, Partial Fractions, Rational & Irrational Functions', oos: false },
+          { num: 'T3', title: 'Definite Integrals and Fundamental Properties', oos: false },
+          { num: 'T4', title: 'Leibnitz Rule and Limit as a Sum', oos: false }
+        ]
+      },
+      {
+        subject: 'math',
+        subjectName: 'Mathematics',
+        classNum: 12,
+        chapterId: 'm12_aoi',
+        chapterName: '8. Applications of Integrals',
+        specialColName: 'NCERT Qs',
+        topics: [
+          { num: 'T1', title: 'Area Under Simple Curves & Regions Bounded by Curves & Coordinate Axes', oos: false },
+          { num: 'T2', title: 'Area Bounded Between Two Intersecting Curves', oos: false }
+        ]
+      },
+      {
+        subject: 'math',
+        subjectName: 'Mathematics',
+        classNum: 12,
+        chapterId: 'm12_de',
+        chapterName: '9. Differential Equations',
+        specialColName: 'NCERT Qs',
+        topics: [
+          { num: 'T1', title: 'Order & Degree of Differential Equations', oos: false },
+          { num: 'T2', title: 'General and Particular Solutions, Separation of Variables, Homogeneous D.E.', oos: false },
+          { num: 'T3', title: 'Linear Differential Equations of First Order (Integrating Factor)', oos: false },
+          { num: 'T4', title: 'Inspection Method and Reducible to Homogeneous Forms', oos: false }
+        ]
+      },
+      {
+        subject: 'math',
+        subjectName: 'Mathematics',
+        classNum: 12,
+        chapterId: 'm12_vectors',
+        chapterName: '10. Vector Algebra',
+        specialColName: 'NCERT Qs',
+        topics: [
+          { num: 'T1', title: 'Algebra of Vectors, Section Formula, Position Vector, Modulus', oos: false },
+          { num: 'T2', title: 'Dot (Scalar) Product and Projections of Vectors', oos: false },
+          { num: 'T3', title: 'Cross (Vector) Product, Area of Triangle and Parallelogram', oos: false },
+          { num: 'T4', title: 'Scalar Triple Product and Vector Triple Product', oos: true, adv: true }
+        ]
+      },
+      {
+        subject: 'math',
+        subjectName: 'Mathematics',
+        classNum: 12,
+        chapterId: 'm12_3d',
+        chapterName: '11. Three Dimensional Geometry',
+        specialColName: 'NCERT Qs',
+        topics: [
+          { num: 'T1', title: 'Direction Ratios and Direction Cosines of a Line, Angles Between Lines', oos: false },
+          { num: 'T2', title: 'Equation of a Line (Cartesian & Vector Form), Shortest Distance Between Skew Lines', oos: false },
+          { num: 'T3', title: 'Planes in 3D Space (Dropped from Main, Preserved for Advanced)', oos: true, adv: true }
+        ]
+      },
+      {
+        subject: 'math',
+        subjectName: 'Mathematics',
+        classNum: 12,
+        chapterId: 'm12_prob',
+        chapterName: '12. Probability (Class XII)',
+        specialColName: 'NCERT Qs',
+        topics: [
+          { num: 'T1', title: 'Conditional Probability, Multiplication Rule, Independent Events, Bayes\' Theorem', oos: false },
+          { num: 'T2', title: 'Random Variables and Probability Distributions', oos: true },
+          { num: 'T3', title: 'Bernoulli Trials and Binomial Distributions', oos: true }
+        ]
+      },
+      {
+        subject: 'math',
+        subjectName: 'Mathematics',
+        classNum: 12,
+        chapterId: 'm12_sot',
+        chapterName: '13. Properties of Triangles',
+        specialColName: 'NCERT Qs',
+        topics: [
+          { num: 'T1', title: 'Properties of Triangles, Inscribed & Circumscribed Circles', oos: true, adv: true },
+          { num: 'T2', title: 'Heights and Distances', oos: true }
+        ]
+      },
+
+      // ---------------- PHYSICS CLASS 11 ----------------
+      {
+        subject: 'phy',
+        subjectName: 'Physics',
+        classNum: 11,
+        chapterId: 'p11_units',
+        chapterName: '1. Units and Measurements',
+        specialColName: 'NCERT Read',
+        topics: [
+          { num: 'T1', title: 'Units of Physical Quantities & SI System', oos: false },
+          { num: 'T2', title: 'Dimensions of Physical Quantities and Dimensional Analysis', oos: false },
+          { num: 'T3', title: 'Errors in Measurement and Significant Figures', oos: false },
+          { num: 'T4', title: 'Miscellaneous Applied Problems', oos: false }
+        ]
+      },
+      {
+        subject: 'phy',
+        subjectName: 'Physics',
+        classNum: 11,
+        chapterId: 'p11_1d',
+        chapterName: '2. Motion in a Straight Line',
+        specialColName: 'NCERT Read',
+        topics: [
+          { num: 'T1', title: 'Distance, Displacement, Speed and Uniform Motion', oos: false },
+          { num: 'T2', title: 'Non-Uniform Motion, Instantaneous Velocity and Acceleration', oos: false },
+          { num: 'T3', title: 'Relative Velocity in 1D', oos: false },
+          { num: 'T4', title: 'Motion Under Gravity', oos: false }
+        ]
+      },
+      {
+        subject: 'phy',
+        subjectName: 'Physics',
+        classNum: 11,
+        chapterId: 'p11_2d',
+        chapterName: '3. Motion in a Plane',
+        specialColName: 'NCERT Read',
+        topics: [
+          { num: 'T1', title: 'Vectors and Vector Addition/Resolution', oos: false },
+          { num: 'T2', title: 'Motion in a Plane with Constant Acceleration', oos: false },
+          { num: 'T3', title: 'Projectile Motion (Ground to Ground & Inclined)', oos: false },
+          { num: 'T4', title: 'Relative Velocity in 2D and Uniform Circular Motion', oos: false }
+        ]
+      },
+      {
+        subject: 'phy',
+        subjectName: 'Physics',
+        classNum: 11,
+        chapterId: 'p11_nlom',
+        chapterName: '4. Laws of Motion',
+        specialColName: 'NCERT Read',
+        topics: [
+          { num: 'T1', title: 'Newton\'s 1st, 2nd, and 3rd Laws of Motion, Momentum & Impulse', oos: false },
+          { num: 'T2', title: 'Connected Bodies, Pulleys, and Equilibrium of Concurrent Forces', oos: false },
+          { num: 'T3', title: 'Friction (Static, Kinetic, Rolling)', oos: false },
+          { num: 'T4', title: 'Circular Dynamics & Banking of Roads', oos: false }
+        ]
+      },
+      {
+        subject: 'phy',
+        subjectName: 'Physics',
+        classNum: 11,
+        chapterId: 'p11_wep',
+        chapterName: '5. Work, Energy and Power',
+        specialColName: 'NCERT Read',
+        topics: [
+          { num: 'T1', title: 'Work Done by Constant and Variable Forces', oos: false },
+          { num: 'T2', title: 'Kinetic & Potential Energy, Work-Energy Theorem', oos: false },
+          { num: 'T3', title: 'Power (Instantaneous and Average)', oos: false },
+          { num: 'T4', title: 'Collisions in 1D and 2D (Elastic & Inelastic)', oos: false }
+        ]
+      },
+      {
+        subject: 'phy',
+        subjectName: 'Physics',
+        classNum: 11,
+        chapterId: 'p11_rot',
+        chapterName: '6. System of Particles & Rotational Motion',
+        specialColName: 'NCERT Read',
+        topics: [
+          { num: 'T1', title: 'Centre of Mass, Motion of COM & Principle of Moments', oos: false },
+          { num: 'T2', title: 'Angular Kinematics (Displacement, Velocity, Acceleration)', oos: false },
+          { num: 'T3', title: 'Torque, Angular Momentum and Conservation of Angular Momentum', oos: false },
+          { num: 'T4', title: 'Moment of Inertia, Radius of Gyration & Rotational Energy', oos: false },
+          { num: 'T5', title: 'Rolling Motion (With and Without Slipping)', oos: false }
+        ]
+      },
+      {
+        subject: 'phy',
+        subjectName: 'Physics',
+        classNum: 11,
+        chapterId: 'p11_grav',
+        chapterName: '7. Gravitation',
+        specialColName: 'NCERT Read',
+        topics: [
+          { num: 'T1', title: 'Kepler\'s Laws of Planetary Motion', oos: false },
+          { num: 'T2', title: 'Newton\'s Law of Gravitation & Principle of Superposition', oos: false },
+          { num: 'T3', title: 'Acceleration Due to Gravity \'g\' and Its Variation', oos: false },
+          { num: 'T4', title: 'Gravitational Field and Potential Energy', oos: false },
+          { num: 'T5', title: 'Escape Velocity and Orbital Velocity of Satellites', oos: false },
+          { num: 'T6', title: 'Geostationary and Polar Satellites Detailed Descriptive Features', oos: true }
+        ]
+      },
+      {
+        subject: 'phy',
+        subjectName: 'Physics',
+        classNum: 11,
+        chapterId: 'p11_solids',
+        chapterName: '8. Mechanical Properties of Solids',
+        specialColName: 'NCERT Read',
+        topics: [
+          { num: 'T1', title: 'Hooke\'s Law, Stress-Strain Curve, Young\'s Modulus', oos: false },
+          { num: 'T2', title: 'Bulk Modulus, Shear Modulus, Work Done in Stretching Wire', oos: false }
+        ]
+      },
+      {
+        subject: 'phy',
+        subjectName: 'Physics',
+        classNum: 11,
+        chapterId: 'p11_fluids',
+        chapterName: '9. Mechanical Properties of Fluids',
+        specialColName: 'NCERT Read',
+        topics: [
+          { num: 'T1', title: 'Pressure, Density, Pascal\'s Law and Archimedes\' Principle', oos: false },
+          { num: 'T2', title: 'Streamline Flow, Continuity Equation & Bernoulli\'s Principle', oos: false },
+          { num: 'T3', title: 'Viscosity, Stokes\' Law and Terminal Velocity', oos: false },
+          { num: 'T4', title: 'Surface Tension, Surface Energy, Angle of Contact and Capillarity', oos: false }
+        ]
+      },
+      {
+        subject: 'phy',
+        subjectName: 'Physics',
+        classNum: 11,
+        chapterId: 'p11_thermal',
+        chapterName: '10. Thermal Properties of Matter',
+        specialColName: 'NCERT Read',
+        topics: [
+          { num: 'T1', title: 'Temperature, Thermometers and Thermal Expansion', oos: false },
+          { num: 'T2', title: 'Calorimetry, Latent Heat and Modes of Heat Transfer', oos: false },
+          { num: 'T3', title: 'Newton\'s Law of Cooling', oos: true }
+        ]
+      },
+      {
+        subject: 'phy',
+        subjectName: 'Physics',
+        classNum: 11,
+        chapterId: 'p11_thermo',
+        chapterName: '11. Thermodynamics (Physics)',
+        specialColName: 'NCERT Read',
+        topics: [
+          { num: 'T1', title: 'First Law of Thermodynamics and Internal Energy', oos: false },
+          { num: 'T2', title: 'Thermodynamic Processes (Isothermal, Adiabatic, Isochoric, Isobaric)', oos: false },
+          { num: 'T3', title: 'Carnot Engine, Heat Engines and Refrigerators', oos: true }
+        ]
+      },
+      {
+        subject: 'phy',
+        subjectName: 'Physics',
+        classNum: 11,
+        chapterId: 'p11_ktg',
+        chapterName: '12. Kinetic Theory',
+        specialColName: 'NCERT Read',
+        topics: [
+          { num: 'T1', title: 'Kinetic Theory of Ideal Gas and Gas Laws', oos: false },
+          { num: 'T2', title: 'Pressure of Gas, RMS Speed and Kinetic Energy', oos: false },
+          { num: 'T3', title: 'Degrees of Freedom, Law of Equipartition, Mean Free Path', oos: false }
+        ]
+      },
+      {
+        subject: 'phy',
+        subjectName: 'Physics',
+        classNum: 11,
+        chapterId: 'p11_shm',
+        chapterName: '13. Oscillations',
+        specialColName: 'NCERT Read',
+        topics: [
+          { num: 'T1', title: 'Displacement, Velocity, Acceleration, Phase in SHM', oos: false },
+          { num: 'T2', title: 'Kinetic & Potential Energy in Simple Harmonic Motion', oos: false },
+          { num: 'T3', title: 'Simple Pendulum and Spring-Block System', oos: false },
+          { num: 'T4', title: 'Damped & Forced Oscillations, Resonance', oos: true }
+        ]
+      },
+      {
+        subject: 'phy',
+        subjectName: 'Physics',
+        classNum: 11,
+        chapterId: 'p11_waves',
+        chapterName: '14. Waves',
+        specialColName: 'NCERT Read',
+        topics: [
+          { num: 'T1', title: 'Progressive Waves, Wave Speed, Displacement Relations', oos: false },
+          { num: 'T2', title: 'Standing Waves in Strings and Organ Pipes', oos: false },
+          { num: 'T3', title: 'Beats and Interference of Sound Waves', oos: false },
+          { num: 'T4', title: 'Doppler Effect in Sound', oos: true }
+        ]
+      },
+      {
+        subject: 'phy',
+        subjectName: 'Physics',
+        classNum: 11,
+        chapterId: 'p11_labs',
+        chapterName: '15. Experimental Skills (Class XI)',
+        specialColName: 'NCERT Read',
+        topics: [
+          { num: 'T1', title: 'Vernier Calipers and Screw Gauge', oos: false },
+          { num: 'T2', title: 'Simple Pendulum, Young\'s Modulus, Surface Tension, Viscosity, Speed of Sound', oos: false }
+        ]
+      },
+
+      // ---------------- CHEMISTRY CLASS 11 ----------------
+      {
+        subject: 'chem',
+        subjectName: 'Chemistry',
+        classNum: 11,
+        chapterId: 'c11_mole',
+        chapterName: '1. Some Basic Concepts of Chemistry',
+        specialColName: 'NCERT Read',
+        topics: [
+          { num: 'T1', title: 'Laws of Chemical Combination & Mole Concept', oos: false },
+          { num: 'T2', title: 'Percentage Composition, Empirical & Molecular Formula', oos: false },
+          { num: 'T3', title: 'Stoichiometry, Limiting Reagent and Concentration Terms', oos: false }
+        ]
+      },
+      {
+        subject: 'chem',
+        subjectName: 'Chemistry',
+        classNum: 11,
+        chapterId: 'c11_atom',
+        chapterName: '2. Structure of Atom',
+        specialColName: 'NCERT Read',
+        topics: [
+          { num: 'T1', title: 'Developments Leading to Bohr\'s Model of Atom', oos: false },
+          { num: 'T2', title: 'Bohr\'s Model for Hydrogen Atom (Line Spectra)', oos: false },
+          { num: 'T3', title: 'Dual Nature of Matter (de Broglie) and Heisenberg Uncertainty Principle', oos: false },
+          { num: 'T4', title: 'Quantum Mechanical Model, Orbitals, Quantum Numbers, Aufbau, Pauli, Hund', oos: false }
+        ]
+      },
+      {
+        subject: 'chem',
+        subjectName: 'Chemistry',
+        classNum: 11,
+        chapterId: 'c11_periodic',
+        chapterName: '3. Periodic Table & Periodicity',
+        specialColName: 'NCERT Read',
+        topics: [
+          { num: 'T1', title: 'Modern Periodic Table and Electronic Configurations', oos: false },
+          { num: 'T2', title: 'Periodic Trends (Atomic/Ionic Radii, IE, EA, Electronegativity)', oos: false }
+        ]
+      },
+      {
+        subject: 'chem',
+        subjectName: 'Chemistry',
+        classNum: 11,
+        chapterId: 'c11_bonding',
+        chapterName: '4. Chemical Bonding and Molecular Structure',
+        specialColName: 'NCERT Read',
+        topics: [
+          { num: 'T1', title: 'Ionic Bonding, Lattice Enthalpy and Covalent Bonding', oos: false },
+          { num: 'T2', title: 'Octet Rule and Resonance Structures', oos: false },
+          { num: 'T3', title: 'Dipole Moment and Fajan\'s Rules', oos: false },
+          { num: 'T4', title: 'VSEPR Theory, Valence Bond Theory and Hybridisation', oos: false },
+          { num: 'T5', title: 'Molecular Orbital Theory (MOT) and Hydrogen Bonding', oos: false }
+        ]
+      },
+      {
+        subject: 'chem',
+        subjectName: 'Chemistry',
+        classNum: 11,
+        chapterId: 'c11_states',
+        chapterName: '5. States of Matter',
+        specialColName: 'NCERT Read',
+        topics: [
+          { num: 'T1', title: 'Gas Laws and Ideal Gas Equation', oos: true },
+          { num: 'T2', title: 'Kinetic Molecular Theory of Gases & Speeds', oos: true },
+          { num: 'T3', title: 'Real Gases, Van der Waals Equation, Liquefaction', oos: true }
+        ]
+      },
+      {
+        subject: 'chem',
+        subjectName: 'Chemistry',
+        classNum: 11,
+        chapterId: 'c11_thermo',
+        chapterName: '6. Chemical Thermodynamics',
+        specialColName: 'NCERT Read',
+        topics: [
+          { num: 'T1', title: 'First Law of Thermodynamics and State Functions', oos: false },
+          { num: 'T2', title: 'Enthalpies of Reaction, Hess\'s Law, Bond Enthalpies', oos: false },
+          { num: 'T3', title: 'Entropy and Second Law of Thermodynamics', oos: false },
+          { num: 'T4', title: 'Spontaneity and Gibbs Free Energy (Delta G)', oos: false }
+        ]
+      },
+      {
+        subject: 'chem',
+        subjectName: 'Chemistry',
+        classNum: 11,
+        chapterId: 'c11_eqm',
+        chapterName: '7. Equilibrium',
+        specialColName: 'NCERT Read',
+        topics: [
+          { num: 'T1', title: 'Law of Mass Action, Equilibrium Constant (Kc, Kp)', oos: false },
+          { num: 'T2', title: 'Le Chatelier\'s Principle and Factors Affecting Equilibrium', oos: false },
+          { num: 'T3', title: 'Acids and Bases Theories, pH Scale, Ionic Product of Water', oos: false },
+          { num: 'T4', title: 'Ionisation of Weak Acids/Bases, Ka, Kb Relations', oos: false },
+          { num: 'T5', title: 'Common Ion Effect, Salt Hydrolysis, Buffer Solutions, Ksp', oos: false }
+        ]
+      },
+      {
+        subject: 'chem',
+        subjectName: 'Chemistry',
+        classNum: 11,
+        chapterId: 'c11_redox',
+        chapterName: '8. Redox Reactions',
+        specialColName: 'NCERT Read',
+        topics: [
+          { num: 'T1', title: 'Concept of Oxidation & Reduction', oos: false },
+          { num: 'T2', title: 'Oxidation Number Determination Rules', oos: false },
+          { num: 'T3', title: 'Balancing Redox Reactions (Ion Electron & Oxidation Number Methods)', oos: false }
+        ]
+      },
+      {
+        subject: 'chem',
+        subjectName: 'Chemistry',
+        classNum: 11,
+        chapterId: 'c11_hydrogen',
+        chapterName: '9. Hydrogen',
+        specialColName: 'NCERT Read',
+        topics: [
+          { num: 'T1', title: 'Hydrides, Water, Heavy Water, Hydrogen Peroxide H2O2', oos: true }
+        ]
+      },
+      {
+        subject: 'chem',
+        subjectName: 'Chemistry',
+        classNum: 11,
+        chapterId: 'c11_sblock',
+        chapterName: '10. The s-Block Elements',
+        specialColName: 'NCERT Read',
+        topics: [
+          { num: 'T1', title: 'Alkali and Alkaline Earth Metals & Their Industrial Compounds', oos: true }
+        ]
+      },
+      {
+        subject: 'chem',
+        subjectName: 'Chemistry',
+        classNum: 11,
+        chapterId: 'c11_pblock',
+        chapterName: '11. The p-Block Elements (Group 13 & 14)',
+        specialColName: 'NCERT Read',
+        topics: [
+          { num: 'T1', title: 'Group 13: Boron Family (General Trends & Properties)', oos: false },
+          { num: 'T2', title: 'Group 14: Carbon Family (Allotropes, Trends & Properties)', oos: false }
+        ]
+      },
+      {
+        subject: 'chem',
+        subjectName: 'Chemistry',
+        classNum: 11,
+        chapterId: 'c11_goc',
+        chapterName: '12. Organic Chemistry: Basic Principles (GOC)',
+        specialColName: 'NCERT Read',
+        topics: [
+          { num: 'T1', title: 'IUPAC Nomenclature of Organic Compounds', oos: false },
+          { num: 'T2', title: 'Isomerism (Structural and Stereoisomerism)', oos: false },
+          { num: 'T3', title: 'Electronic Displacements: Inductive, Electromeric, Resonance, Hyperconjugation', oos: false },
+          { num: 'T4', title: 'Purification & Qualitative/Quantitative Analysis (Kjeldahl, Dumas, C&H)', oos: false }
+        ]
+      },
+      {
+        subject: 'chem',
+        subjectName: 'Chemistry',
+        classNum: 11,
+        chapterId: 'c11_hydrocarbons',
+        chapterName: '13. Hydrocarbons',
+        specialColName: 'NCERT Read',
+        topics: [
+          { num: 'T1', title: 'Alkanes (Conformations, Free Radical Halogenation)', oos: false },
+          { num: 'T2', title: 'Alkenes (Geometrical Isomerism, Markovnikov Addition, Ozonolysis)', oos: false },
+          { num: 'T3', title: 'Alkynes (Acidity, Addition Reactions)', oos: false },
+          { num: 'T4', title: 'Aromatic Hydrocarbons (Benzene, Electrophilic Substitution, Huckel\'s Rule)', oos: false }
+        ]
+      },
+      {
+        subject: 'chem',
+        subjectName: 'Chemistry',
+        classNum: 11,
+        chapterId: 'c11_environ',
+        chapterName: '14. Environmental Chemistry',
+        specialColName: 'NCERT Read',
+        topics: [
+          { num: 'T1', title: 'Tropospheric & Stratospheric Pollution, Smog, Acid Rain, Greenhouse Effect', oos: true }
+        ]
+      },
+
+      // ---------------- CHEMISTRY CLASS 12 ----------------
+      {
+        subject: 'chem',
+        subjectName: 'Chemistry',
+        classNum: 12,
+        chapterId: 'c12_solid',
+        chapterName: '1. The Solid State',
+        specialColName: 'NCERT Read',
+        topics: [
+          { num: 'T1', title: 'Crystal Lattices, Unit Cells, Packing Efficiency, Defects', oos: true }
+        ]
+      },
+      {
+        subject: 'chem',
+        subjectName: 'Chemistry',
+        classNum: 12,
+        chapterId: 'c12_solutions',
+        chapterName: '2. Solutions',
+        specialColName: 'NCERT Read',
+        topics: [
+          { num: 'T1', title: 'Types of Solutions, Henry\'s Law, Solubility of Gases', oos: false },
+          { num: 'T2', title: 'Raoult\'s Law, Ideal and Non-Ideal Solutions, Azeotropes', oos: false },
+          { num: 'T3', title: 'Colligative Properties and Abnormal Molar Mass (van \'t Hoff Factor)', oos: false }
+        ]
+      },
+      {
+        subject: 'chem',
+        subjectName: 'Chemistry',
+        classNum: 12,
+        chapterId: 'c12_electro',
+        chapterName: '3. Electrochemistry',
+        specialColName: 'NCERT Read',
+        topics: [
+          { num: 'T1', title: 'Electrochemical Cells, Electrode Potential, Nernst Equation', oos: false },
+          { num: 'T2', title: 'Conductivity, Molar Conductivity, Kohlrausch\'s Law', oos: false },
+          { num: 'T3', title: 'Electrolysis and Faraday\'s Laws of Electrolysis', oos: false },
+          { num: 'T4', title: 'Primary/Secondary Batteries, Fuel Cells and Corrosion', oos: true }
+        ]
+      },
+      {
+        subject: 'chem',
+        subjectName: 'Chemistry',
+        classNum: 12,
+        chapterId: 'c12_kinetics',
+        chapterName: '4. Chemical Kinetics',
+        specialColName: 'NCERT Read',
+        topics: [
+          { num: 'T1', title: 'Rate of Reaction, Factors Influencing Rate, Rate Law & Constant', oos: false },
+          { num: 'T2', title: 'Order & Molecularity, Integrated Rate Equations (0th & 1st Order)', oos: false },
+          { num: 'T3', title: 'Arrhenius Equation, Activation Energy, Collision Theory', oos: false }
+        ]
+      },
+      {
+        subject: 'chem',
+        subjectName: 'Chemistry',
+        classNum: 12,
+        chapterId: 'c12_surface',
+        chapterName: '5. Surface Chemistry',
+        specialColName: 'NCERT Read',
+        topics: [
+          { num: 'T1', title: 'Adsorption, Catalysis, Colloids and Emulsions', oos: true }
+        ]
+      },
+      {
+        subject: 'chem',
+        subjectName: 'Chemistry',
+        classNum: 12,
+        chapterId: 'c12_metallurgy',
+        chapterName: '6. Isolation of Elements (Metallurgy)',
+        specialColName: 'NCERT Read',
+        topics: [
+          { num: 'T1', title: 'Ores, Concentration, Thermodynamic Principles (Ellingham Diagrams)', oos: true }
+        ]
+      },
+      {
+        subject: 'chem',
+        subjectName: 'Chemistry',
+        classNum: 12,
+        chapterId: 'c12_pblock',
+        chapterName: '7. The p-Block Elements (Group 15, 16, 17, 18)',
+        specialColName: 'NCERT Read',
+        topics: [
+          { num: 'T1', title: 'Group 15: Nitrogen Family (Electronic Config & General Trends)', oos: false },
+          { num: 'T2', title: 'Group 16: Oxygen Family (Electronic Config & General Trends)', oos: false },
+          { num: 'T3', title: 'Group 17: Halogen Family (Electronic Config & General Trends)', oos: false },
+          { num: 'T4', title: 'Group 18: Noble Gases (General Trends & Xenon Compounds)', oos: false },
+          { num: 'T5', title: 'Compounds of Phosphorus, Sulphur, Chlorine (Reduced Topics)', oos: true }
+        ]
+      },
+      {
+        subject: 'chem',
+        subjectName: 'Chemistry',
+        classNum: 12,
+        chapterId: 'c12_dfblock',
+        chapterName: '8. The d- and f-Block Elements',
+        specialColName: 'NCERT Read',
+        topics: [
+          { num: 'T1', title: 'Electronic Configuration, Trends in 3d Transition Series', oos: false },
+          { num: 'T2', title: 'Preparation and Properties of KMnO4 and K2Cr2O7', oos: false },
+          { num: 'T3', title: 'Lanthanoids and Actinoids (Lanthanoid Contraction)', oos: false }
+        ]
+      },
+      {
+        subject: 'chem',
+        subjectName: 'Chemistry',
+        classNum: 12,
+        chapterId: 'c12_coord',
+        chapterName: '9. Coordination Compounds',
+        specialColName: 'NCERT Read',
+        topics: [
+          { num: 'T1', title: 'Werner\'s Theory, IUPAC Nomenclature and Isomerism', oos: false },
+          { num: 'T2', title: 'Valence Bond Theory (VBT) and Crystal Field Theory (CFT)', oos: false },
+          { num: 'T3', title: 'Stability and Importance of Coordination Compounds', oos: false }
+        ]
+      },
+      {
+        subject: 'chem',
+        subjectName: 'Chemistry',
+        classNum: 12,
+        chapterId: 'c12_halo',
+        chapterName: '10. Haloalkanes and Haloarenes',
+        specialColName: 'NCERT Read',
+        topics: [
+          { num: 'T1', title: 'Nomenclature, Nature of C-X Bond, SN1 and SN2 Mechanisms', oos: false },
+          { num: 'T2', title: 'Electrophilic Substitution and Reactions of Haloarenes', oos: false },
+          { num: 'T3', title: 'Polyhalogen Compounds (Dichloromethane, Chloroform, DDT, Freons)', oos: true }
+        ]
+      },
+      {
+        subject: 'chem',
+        subjectName: 'Chemistry',
+        classNum: 12,
+        chapterId: 'c12_alcohol',
+        chapterName: '11. Alcohols, Phenols and Ethers',
+        specialColName: 'NCERT Read',
+        topics: [
+          { num: 'T1', title: 'Preparation and Reactions of Alcohols (Lucas Test, Dehydration)', oos: false },
+          { num: 'T2', title: 'Preparation and Reactions of Phenols (Kolbe, Reimer-Tiemann)', oos: false },
+          { num: 'T3', title: 'Preparation and Reactions of Ethers (Williamson Synthesis)', oos: false }
+        ]
+      },
+      {
+        subject: 'chem',
+        subjectName: 'Chemistry',
+        classNum: 12,
+        chapterId: 'c12_carbonyl',
+        chapterName: '12. Aldehydes, Ketones and Carboxylic Acids',
+        specialColName: 'NCERT Read',
+        topics: [
+          { num: 'T1', title: 'Preparation and Nucleophilic Additions of Carbonyl Compounds', oos: false },
+          { num: 'T2', title: 'Aldol Condensation, Cannizzaro, Clemmensen, Wolff-Kishner', oos: false },
+          { num: 'T3', title: 'Preparation and Acidic Strength of Carboxylic Acids, HVZ Reaction', oos: false }
+        ]
+      },
+      {
+        subject: 'chem',
+        subjectName: 'Chemistry',
+        classNum: 12,
+        chapterId: 'c12_amines',
+        chapterName: '13. Amines',
+        specialColName: 'NCERT Read',
+        topics: [
+          { num: 'T1', title: 'Classification, Basicity of Amines, Gabriel Phthalimide Synthesis', oos: false },
+          { num: 'T2', title: 'Carbylamine Reaction, Hinsberg Test, Diazonium Salts Chemistry', oos: false }
+        ]
+      },
+      {
+        subject: 'chem',
+        subjectName: 'Chemistry',
+        classNum: 12,
+        chapterId: 'c12_biomol',
+        chapterName: '14. Biomolecules',
+        specialColName: 'NCERT Read',
+        topics: [
+          { num: 'T1', title: 'Carbohydrates (Monosaccharides, Glucose Structure, Glycosidic Linkage)', oos: false },
+          { num: 'T2', title: 'Proteins, Amino Acids, Peptide Bond, Denaturation', oos: false },
+          { num: 'T3', title: 'Nucleic Acids (DNA, RNA, Chemical Components)', oos: false },
+          { num: 'T4', title: 'Vitamins and Hormones', oos: true }
+        ]
+      },
+      {
+        subject: 'chem',
+        subjectName: 'Chemistry',
+        classNum: 12,
+        chapterId: 'c12_polymers',
+        chapterName: '15. Polymers',
+        specialColName: 'NCERT Read',
+        topics: [
+          { num: 'T1', title: 'Classification, Addition & Condensation Polymers, Bakelite, Nylon, Buna-S', oos: true }
+        ]
+      },
+      {
+        subject: 'chem',
+        subjectName: 'Chemistry',
+        classNum: 12,
+        chapterId: 'c12_everyday',
+        chapterName: '16. Chemistry in Everyday Life',
+        specialColName: 'NCERT Read',
+        topics: [
+          { num: 'T1', title: 'Analgesics, Tranquilizers, Antiseptics, Artificial Sweeteners, Soaps', oos: true }
+        ]
+      },
+      {
+        subject: 'chem',
+        subjectName: 'Chemistry',
+        classNum: 12,
+        chapterId: 'c12_practicals',
+        chapterName: '17. Practical Chemistry',
+        specialColName: 'NCERT Read',
+        topics: [
+          { num: 'T1', title: 'Detection of Extra Elements (N, S, Halogens) and Functional Groups', oos: false },
+          { num: 'T2', title: 'Qualitative Salt Analysis (Cations and Anions)', oos: false },
+          { num: 'T3', title: 'Titrimetric Principles (Acid-Base, Redox KMnO4) and Calorimetry', oos: false }
+        ]
+      }
+    ];
+
+    /* ========================================================================= */
+    /* 2. MOTIVATIONAL QUOTES REPOSITORY                                         */
+    /* ========================================================================= */
+    const motivationalQuotes = [
+      "Discipline is choosing between what you want now and what you want most.",
+      "The pain of discipline is far less than the pain of regret.",
+      "Small daily improvements over time lead to stunning results at JEE.",
+      "Your future IITian self is watching your work ethic today.",
+      "Consistency beats talent when talent forgets to stay consistent.",
+      "Every PYQ you solve today is a rank higher tomorrow.",
+      "Do not stop when you are tired. Stop when you are done.",
+      "Hard work shines under pressure like diamonds.",
+      "Believe in your preparation. Confidence is built one question at a time.",
+      "Embrace the struggle; it is the exact catalyst for your intellect."
+    ];
+
+    function refreshQuote() {
+      const q = motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)];
+      const el = document.getElementById('motivationalQuoteText');
+      if (el) el.innerText = `"${q}"`;
+    }
+
+    /* ========================================================================= */
+    /* 3. APPLICATION STATE & PERSISTENCE ENGINE                                 */
+    /* ========================================================================= */
+    const APP_STORAGE_KEY = 'jee_master_suite_v5';
+
+    function getTodayDateStr() {
+      const d = new Date();
+      return d.toISOString().split('T')[0];
+    }
+
+    let appState = {
+      activeSection: 'syllabus',
+      activeSubject: 'all',
+      activeClass: 'all',
+      hideOos: false,
+      searchQuery: '',
+      checks: {},
+      pyqAllocation: {
+        math: { target: 25, solved: 0 },
+        phy: { target: 30, solved: 0 },
+        chem: { target: 30, solved: 0 }
+      },
+      jeeMainTargetDate: '2027-01-24',
+      customTargetDate: '',
+      todos: [],
+      dailyLogs: {},
+      lastActiveDate: getTodayDateStr()
+    };
+
+    function loadState() {
+      try {
+        const stored = localStorage.getItem(APP_STORAGE_KEY);
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          appState = { ...appState, ...parsed };
+        }
+      } catch (e) {
+        console.error("Failed to load local storage state", e);
+      }
+
+      const today = getTodayDateStr();
+      if (!appState.dailyLogs) appState.dailyLogs = {};
+      if (!appState.dailyLogs[today]) {
+        appState.dailyLogs[today] = {
+          target: ((appState.pyqAllocation?.math?.target || 25) + (appState.pyqAllocation?.phy?.target || 30) + (appState.pyqAllocation?.chem?.target || 30)),
+          solved: ((appState.pyqAllocation?.math?.solved || 0) + (appState.pyqAllocation?.phy?.solved || 0) + (appState.pyqAllocation?.chem?.solved || 0)),
+          math: appState.pyqAllocation?.math?.solved || 0,
+          phy: appState.pyqAllocation?.phy?.solved || 0,
+          chem: appState.pyqAllocation?.chem?.solved || 0
+        };
+      }
+    }
+
+    function saveState() {
+      try {
+        const today = getTodayDateStr();
+        if (!appState.dailyLogs) appState.dailyLogs = {};
+        appState.dailyLogs[today] = {
+          target: ((appState.pyqAllocation?.math?.target || 25) + (appState.pyqAllocation?.phy?.target || 30) + (appState.pyqAllocation?.chem?.target || 30)),
+          solved: ((appState.pyqAllocation?.math?.solved || 0) + (appState.pyqAllocation?.phy?.solved || 0) + (appState.pyqAllocation?.chem?.solved || 0)),
+          math: appState.pyqAllocation?.math?.solved || 0,
+          phy: appState.pyqAllocation?.phy?.solved || 0,
+          chem: appState.pyqAllocation?.chem?.solved || 0
+        };
+
+        localStorage.setItem(APP_STORAGE_KEY, JSON.stringify(appState));
+        updateHeaderTodaySolved();
+      } catch (e) {
+        console.error("Failed to save state to localStorage", e);
+      }
+    }
+
+    function showToast(msg, icon = '✨') {
+      const toast = document.getElementById('toastNotification');
+      const iconEl = document.getElementById('toastIcon');
+      const msgEl = document.getElementById('toastMsg');
+      if (!toast || !msgEl) return;
+      iconEl.innerText = icon;
+      msgEl.innerText = msg;
+      toast.classList.remove('translate-y-16', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+      setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-16', 'opacity-0');
+      }, 2500);
+    }
+
+    function updateHeaderTodaySolved() {
+      const totalSolved = (appState.pyqAllocation.math.solved || 0) + (appState.pyqAllocation.phy.solved || 0) + (appState.pyqAllocation.chem.solved || 0);
+      const el = document.getElementById('headerTodaySolved');
+      if (el) el.innerText = `${totalSolved} PYQs`;
+      const badge = document.getElementById('historyBadgeCount');
+      if (badge) badge.innerText = `${totalSolved}`;
+    }
+
+    /* ========================================================================= */
+    /* 4. NAVIGATION SECTION SWITCHER                                            */
+    /* ========================================================================= */
+    function switchSection(secId) {
+      appState.activeSection = secId;
+      
+      const sections = ['syllabus', 'targets', 'timer', 'history'];
+      sections.forEach(s => {
+        const secEl = document.getElementById(`view-${s}`);
+        const navBtn = document.getElementById(`nav-btn-${s}`);
+        if (secEl) {
+          if (s === secId) {
+            secEl.classList.remove('hidden');
+            secEl.classList.add('animate-fadeInUp');
+          } else {
+            secEl.classList.add('hidden');
+            secEl.classList.remove('animate-fadeInUp');
+          }
+        }
+        if (navBtn) {
+          if (s === secId) {
+            navBtn.className = "w-full flex items-center gap-3 px-2 sm:px-3 py-2.5 rounded-xl text-xs font-bold transition bg-indigo-600 text-white shadow-md shadow-indigo-600/30 text-left justify-center sm:justify-start";
+          } else {
+            navBtn.className = "w-full flex items-center gap-3 px-2 sm:px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-800/80 transition text-left justify-center sm:justify-start";
+          }
+        }
+      });
+
+      if (secId === 'history') {
+        renderHistoryLogs();
+      }
+      saveState();
+    }
+
+    /* ========================================================================= */
+    /* 5. SYLLABUS CHECKLIST RENDER & FILTERING ENGINE (JEE MAINS BADGE)         */
+    /* ========================================================================= */
+    function setSubject(sub) {
+      appState.activeSubject = sub;
+      ['all', 'math', 'phy', 'chem'].forEach(s => {
+        const pill = document.getElementById(`sub-pill-${s}`);
+        if (!pill) return;
+        if (s === sub) {
+          pill.className = "px-3.5 py-1.5 rounded-lg text-xs font-bold transition bg-indigo-600 text-white shadow-sm";
+        } else {
+          pill.className = "px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition";
+        }
+      });
+      renderSyllabus();
+    }
+
+    function toggleOosFilter() {
+      appState.hideOos = !appState.hideOos;
+      const dot = document.getElementById('oosIndicatorDot');
+      const btn = document.getElementById('btn-toggle-oos');
+      if (dot && btn) {
+        if (appState.hideOos) {
+          dot.className = "w-2 h-2 rounded-full bg-amber-400";
+          btn.className = "px-3 py-2 rounded-xl text-xs font-bold bg-amber-500/10 border border-amber-500/30 text-amber-300 flex items-center gap-1.5 transition";
+        } else {
+          dot.className = "w-2 h-2 rounded-full bg-slate-600";
+          btn.className = "px-3 py-2 rounded-xl text-xs font-bold bg-slate-950 border border-slate-800 text-slate-400 hover:text-amber-400 flex items-center gap-1.5 transition";
+        }
+      }
+      renderSyllabus();
+    }
+
+    function applyFilters() {
+      const clsEl = document.getElementById('classFilterSelect');
+      if (clsEl) appState.activeClass = clsEl.value;
+      renderSyllabus();
+    }
+
+    function handleSearch(val) {
+      appState.searchQuery = val.trim();
+      renderSyllabus();
+    }
+
+    function renderSyllabus() {
+      const container = document.getElementById('syllabusCardsContainer');
+      if (!container) return;
+      container.innerHTML = "";
+
+      const activeSub = appState.activeSubject;
+      const activeCls = appState.activeClass;
+      const hideOos = appState.hideOos;
+      const searchQuery = appState.searchQuery.toLowerCase();
+
+      const filteredChapters = syllabusDatabase.filter(ch => {
+        if (activeSub !== 'all' && ch.subject !== activeSub) return false;
+        if (activeCls !== 'all' && ch.classNum.toString() !== activeCls) return false;
+        return true;
+      });
+
+      if (filteredChapters.length === 0) {
+        container.innerHTML = `
+          <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-8 text-center text-slate-500 text-xs">
+            No matching chapters found with the active filters.
+          </div>
+        `;
+        updateSyllabusStats();
+        return;
+      }
+
+      const subjectsMap = {
+        math: { label: 'Mathematics', color: 'from-blue-600 to-indigo-600' },
+        phy: { label: 'Physics', color: 'from-purple-600 to-pink-600' },
+        chem: { label: 'Chemistry', color: 'from-emerald-600 to-teal-600' }
+      };
+
+      const grouped = {};
+      filteredChapters.forEach(ch => {
+        if (!grouped[ch.subject]) grouped[ch.subject] = [];
+        grouped[ch.subject].push(ch);
+      });
+
+      Object.keys(grouped).forEach(subKey => {
+        const subInfo = subjectsMap[subKey];
+        const chapsForSub = grouped[subKey];
+
+        const card = document.createElement('div');
+        card.className = "bg-slate-900/90 border border-slate-800 rounded-2xl overflow-hidden shadow-xl";
+
+        let cardHtml = `
+          <div class="bg-gradient-to-r ${subInfo.color} p-4 sm:px-6 flex items-center justify-between text-white">
+            <div class="flex items-center gap-2">
+              <span class="text-base font-black uppercase tracking-wider">${subInfo.label}</span>
+              <span class="text-[10px] px-2 py-0.5 rounded-full font-bold bg-white/20 backdrop-blur">${chapsForSub.length} Chapters</span>
+            </div>
+            <span class="text-xs font-semibold text-white/80">JEE Main &amp; Advanced Track</span>
+          </div>
+          <div class="divide-y divide-slate-800/80">
+        `;
+
+        chapsForSub.forEach(chapter => {
+          const matchingTopics = chapter.topics.filter(t => {
+            if (hideOos && t.oos) return false;
+            if (searchQuery) {
+              return t.title.toLowerCase().includes(searchQuery) || chapter.chapterName.toLowerCase().includes(searchQuery) || t.num.toLowerCase().includes(searchQuery);
+            }
+            return true;
+          });
+
+          if (matchingTopics.length === 0) return;
+
+          cardHtml += `
+            <div class="p-4 sm:p-5">
+              <div class="flex items-center justify-between mb-3 flex-wrap gap-2">
+                <div class="flex items-center gap-2">
+                  <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-mono">Class ${chapter.classNum}</span>
+                  <h3 class="text-sm sm:text-base font-bold text-slate-100">${chapter.chapterName}</h3>
+                </div>
+                <div class="flex items-center gap-2">
+                  <button onclick="toggleChapterAll('${chapter.chapterId}', true)" class="text-[10px] font-semibold text-indigo-400 hover:text-indigo-300 px-2 py-1 rounded bg-slate-800/80 border border-slate-700">
+                    Mark All Done
+                  </button>
+                </div>
+              </div>
+
+              <div class="overflow-x-auto rounded-xl border border-slate-800">
+                <table class="w-full text-left text-xs">
+                  <thead class="sticky-th bg-slate-950/95 text-slate-400 font-semibold border-b border-slate-800 uppercase text-[10px] tracking-wider">
+                    <tr>
+                      <th class="py-2.5 px-3 w-16 sm:w-20">Topic</th>
+                      <th class="py-2.5 px-3">Subtopic Coverage</th>
+                      <th class="py-2.5 px-2 text-center w-24">Status</th>
+                      <th class="py-2.5 px-1.5 text-center w-11" title="Notes">Notes</th>
+                      <th class="py-2.5 px-1.5 text-center w-11" title="Revision">Rev</th>
+                      <th class="py-2.5 px-1.5 text-center w-11" title="Short Notes">SN</th>
+                      <th class="py-2.5 px-1.5 text-center w-11" title="PYQs">PYQ</th>
+                      <th class="py-2.5 px-1.5 text-center w-14" title="${chapter.specialColName}">${chapter.specialColName}</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-800/60 bg-slate-900/40">
+          `;
+
+          matchingTopics.forEach(t => {
+            const baseId = `${chapter.chapterId}_${t.num}`;
+            const isOos = t.oos;
+            const isAdv = t.adv;
+
+            let badgeHtml = '<span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">JEE MAINS</span>';
+            if (isOos && isAdv) {
+              badgeHtml = '<span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-amber-500/15 text-amber-300 border border-amber-500/30">[ADV ONLY]</span>';
+            } else if (isOos) {
+              badgeHtml = '<span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-red-500/15 text-red-300 border border-red-500/30">[OOS-M]</span>';
+            }
+
+            const rowBg = isOos ? 'bg-red-950/10' : '';
+
+            cardHtml += `
+              <tr class="${rowBg} hover:bg-slate-800/40 transition">
+                <td class="py-2 px-3 font-mono font-bold text-slate-300">${t.num}</td>
+                <td class="py-2 px-3 text-slate-200">${t.title}</td>
+                <td class="py-2 px-2 text-center">${badgeHtml}</td>
+                <td class="py-2 px-1.5 text-center">
+                  <input type="checkbox" class="custom-checkbox" onchange="toggleTick('${baseId}_n')" ${appState.checks[baseId + '_n'] ? 'checked' : ''}>
+                </td>
+                <td class="py-2 px-1.5 text-center">
+                  <input type="checkbox" class="custom-checkbox" onchange="toggleTick('${baseId}_r')" ${appState.checks[baseId + '_r'] ? 'checked' : ''}>
+                </td>
+                <td class="py-2 px-1.5 text-center">
+                  <input type="checkbox" class="custom-checkbox" onchange="toggleTick('${baseId}_sn')" ${appState.checks[baseId + '_sn'] ? 'checked' : ''}>
+                </td>
+                <td class="py-2 px-1.5 text-center">
+                  <input type="checkbox" class="custom-checkbox" onchange="toggleTick('${baseId}_pyq')" ${appState.checks[baseId + '_pyq'] ? 'checked' : ''}>
+                </td>
+                <td class="py-2 px-1.5 text-center">
+                  <input type="checkbox" class="custom-checkbox" onchange="toggleTick('${baseId}_nc')" ${appState.checks[baseId + '_nc'] ? 'checked' : ''}>
+                </td>
+              </tr>
+            `;
+          });
+
+          cardHtml += `
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          `;
+        });
+
+        cardHtml += `</div>`;
+        card.innerHTML = cardHtml;
+        container.appendChild(card);
+      });
+
+      updateSyllabusStats();
+    }
+
+    function toggleTick(key) {
+      appState.checks[key] = !appState.checks[key];
+      saveState();
+      updateSyllabusStats();
+    }
+
+    function toggleChapterAll(chapterId, status) {
+      const chapter = syllabusDatabase.find(c => c.chapterId === chapterId);
+      if (!chapter) return;
+      chapter.topics.forEach(t => {
+        const baseId = `${chapter.chapterId}_${t.num}`;
+        ['n', 'r', 'sn', 'pyq', 'nc'].forEach(suffix => {
+          appState.checks[`${baseId}_${suffix}`] = status;
+        });
+      });
+      saveState();
+      renderSyllabus();
+      showToast(`Chapter "${chapter.chapterName}" completed!`, '🎉');
+    }
+
+    function updateSyllabusStats() {
+      let totalBoxes = 0;
+      let totalChecked = 0;
+
+      const subStats = {
+        math: { total: 0, checked: 0 },
+        phy: { total: 0, checked: 0 },
+        chem: { total: 0, checked: 0 }
+      };
+
+      syllabusDatabase.forEach(ch => {
+        ch.topics.forEach(t => {
+          const baseId = `${ch.chapterId}_${t.num}`;
+          ['n', 'r', 'sn', 'pyq', 'nc'].forEach(suffix => {
+            totalBoxes++;
+            if (subStats[ch.subject]) subStats[ch.subject].total++;
+            if (appState.checks[`${baseId}_${suffix}`]) {
+              totalChecked++;
+              if (subStats[ch.subject]) subStats[ch.subject].checked++;
+            }
+          });
+        });
+      });
+
+      const overallPct = totalBoxes ? Math.round((totalChecked / totalBoxes) * 100) : 0;
+      const mathPct = subStats.math.total ? Math.round((subStats.math.checked / subStats.math.total) * 100) : 0;
+      const phyPct = subStats.phy.total ? Math.round((subStats.phy.checked / subStats.phy.total) * 100) : 0;
+      const chemPct = subStats.chem.total ? Math.round((subStats.chem.checked / subStats.chem.total) * 100) : 0;
+
+      const setTxt = (id, val) => { const el = document.getElementById(id); if (el) el.innerText = val; };
+      const setBar = (id, pct) => { const el = document.getElementById(id); if (el) el.style.width = pct + '%'; };
+
+      setTxt('overallPercentText', `${overallPct}%`);
+      setTxt('overallTicksCount', `${totalChecked} / ${totalBoxes}`);
+      setBar('overallProgressBar', overallPct);
+
+      setTxt('mathPercentText', `${mathPct}%`);
+      setTxt('mathTicksCount', `${subStats.math.checked} ticks`);
+      setBar('mathProgressBar', mathPct);
+
+      setTxt('phyPercentText', `${phyPct}%`);
+      setTxt('phyTicksCount', `${subStats.phy.checked} ticks`);
+      setBar('phyProgressBar', phyPct);
+
+      setTxt('chemPercentText', `${chemPct}%`);
+      setTxt('chemTicksCount', `${subStats.chem.checked} ticks`);
+      setBar('chemProgressBar', chemPct);
+    }
+
+    /* ========================================================================= */
+    /* 6. DAILY PYQS ALLOCATION & PROJECTIONS ENGINE                             */
+    /* ========================================================================= */
+    function syncPyqInputs() {
+      ['math', 'phy', 'chem'].forEach(sub => {
+        const inpS = document.getElementById(`inp-${sub}-solved`);
+        const inpT = document.getElementById(`inp-${sub}-target`);
+        if (inpS) inpS.value = appState.pyqAllocation[sub].solved;
+        if (inpT) inpT.value = appState.pyqAllocation[sub].target;
+      });
+      updatePyqChartsAndProjections();
+    }
+
+    function handlePyqChange(sub) {
+      const inpS = document.getElementById(`inp-${sub}-solved`);
+      const inpT = document.getElementById(`inp-${sub}-target`);
+      if (inpS) appState.pyqAllocation[sub].solved = Math.max(0, parseInt(inpS.value) || 0);
+      if (inpT) appState.pyqAllocation[sub].target = Math.max(1, parseInt(inpT.value) || 1);
+      saveState();
+      updatePyqChartsAndProjections();
+    }
+
+    function incPyq(sub, delta) {
+      appState.pyqAllocation[sub].solved = Math.max(0, (appState.pyqAllocation[sub].solved || 0) + delta);
+      const inpS = document.getElementById(`inp-${sub}-solved`);
+      if (inpS) inpS.value = appState.pyqAllocation[sub].solved;
+      saveState();
+      updatePyqChartsAndProjections();
+    }
+
+    function resetDailyPyqs() {
+      ['math', 'phy', 'chem'].forEach(s => {
+        appState.pyqAllocation[s].solved = 0;
+        const inpS = document.getElementById(`inp-${s}-solved`);
+        if (inpS) inpS.value = 0;
+      });
+      saveState();
+      updatePyqChartsAndProjections();
+      showToast('Daily solved counters reset to 0.', '🔄');
+    }
+
+    function updatePyqChartsAndProjections() {
+      const mathT = appState.pyqAllocation.math.target || 1;
+      const mathS = appState.pyqAllocation.math.solved || 0;
+      const phyT = appState.pyqAllocation.phy.target || 1;
+      const phyS = appState.pyqAllocation.phy.solved || 0;
+      const chemT = appState.pyqAllocation.chem.target || 1;
+      const chemS = appState.pyqAllocation.chem.solved || 0;
+
+      const totalTarget = mathT + phyT + chemT;
+      const totalSolved = mathS + phyS + chemS;
+
+      const mathPct = Math.min(100, Math.round((mathS / mathT) * 100));
+      const phyPct = Math.min(100, Math.round((phyS / phyT) * 100));
+      const chemPct = Math.min(100, Math.round((chemS / chemT) * 100));
+
+      const setTxt = (id, val) => { const el = document.getElementById(id); if (el) el.innerText = val; };
+      const setBar = (id, pct) => { const el = document.getElementById(id); if (el) el.style.width = pct + '%'; };
+
+      setTxt('mathDailyPct', `${mathPct}%`);
+      setBar('mathDailyBar', mathPct);
+      setTxt('phyDailyPct', `${phyPct}%`);
+      setBar('phyDailyBar', phyPct);
+      setTxt('chemDailyPct', `${chemPct}%`);
+      setBar('chemDailyBar', chemPct);
+
+      setTxt('chartTotalTargetPill', `${totalTarget} Qs Target`);
+      setTxt('chartCenterSolved', totalSolved);
+
+      const C = 251.327; // 2 * pi * 40
+      const mathLen = (mathT / totalTarget) * C;
+      const phyLen = (phyT / totalTarget) * C;
+      const chemLen = (chemT / totalTarget) * C;
+
+      const sMath = document.getElementById('donutMathSlice');
+      const sPhy = document.getElementById('donutPhySlice');
+      const sChem = document.getElementById('donutChemSlice');
+
+      if (sMath && sPhy && sChem) {
+        sMath.setAttribute('stroke-dasharray', `${mathLen} ${C}`);
+        sMath.setAttribute('stroke-dashoffset', '0');
+
+        sPhy.setAttribute('stroke-dasharray', `${phyLen} ${C}`);
+        sPhy.setAttribute('stroke-dashoffset', `${-mathLen}`);
+
+        sChem.setAttribute('stroke-dasharray', `${chemLen} ${C}`);
+        sChem.setAttribute('stroke-dashoffset', `${-(mathLen + phyLen)}`);
+      }
+
+      setTxt('legendMathText', `${mathT} (${Math.round((mathT / totalTarget) * 100)}%)`);
+      setTxt('legendPhyText', `${phyT} (${Math.round((phyT / totalTarget) * 100)}%)`);
+      setTxt('legendChemText', `${chemT} (${Math.round((chemT / totalTarget) * 100)}%)`);
+
+      setTxt('projPaceDaily', totalTarget);
+      setTxt('projPaceWeekly', (totalTarget * 7).toLocaleString());
+      setTxt('projPaceMonthly', (totalTarget * 30).toLocaleString());
+
+      const targetDateStr = appState.jeeMainTargetDate || '2027-01-24';
+      const examDate = new Date(targetDateStr + "T09:00:00").getTime();
+      const now = new Date().getTime();
+      const diffDays = Math.max(0, Math.ceil((examDate - now) / (1000 * 60 * 60 * 24)));
+
+      setTxt('projectionCountdownDays', diffDays);
+      setTxt('projPaceExam', (totalTarget * diffDays).toLocaleString());
+      const elBreakdown = document.getElementById('projPaceBreakdown');
+      if (elBreakdown) {
+        const mTotal = (mathT * diffDays).toLocaleString();
+        const pTotal = (phyT * diffDays).toLocaleString();
+        const cTotal = (chemT * diffDays).toLocaleString();
+        elBreakdown.innerText = `Math: ${mTotal} • Phy: ${pTotal} • Chem: ${cTotal}`;
+      }
+    }
+
+    /* ========================================================================= */
+    /* 7. TO-DO LIST & TOPIC QUEUING HUB                                         */
+    /* ========================================================================= */
+    function populateTopicDropdown() {
+      const select = document.getElementById('syllabusTopicDropdown');
+      if (!select) return;
+      select.innerHTML = '<option value="">-- Or Pick a Syllabus Subtopic --</option>';
+
+      syllabusDatabase.forEach(ch => {
+        const optGroup = document.createElement('optgroup');
+        optGroup.label = `${ch.subjectName.toUpperCase()} - ${ch.chapterName}`;
+        ch.topics.forEach(t => {
+          const opt = document.createElement('option');
+          opt.value = `[${ch.subjectName.substring(0,4).toUpperCase()}] ${ch.chapterName} -> ${t.num}: ${t.title}`;
+          opt.innerText = `${t.num}: ${t.title} ${t.oos ? '[OOS-M]' : ''}`;
+          optGroup.appendChild(opt);
+        });
+        select.appendChild(optGroup);
+      });
+    }
+
+    function renderTodoList() {
+      const ul = document.getElementById('todoItemsList');
+      if (!ul) return;
+      ul.innerHTML = "";
+
+      if (!appState.todos || appState.todos.length === 0) {
+        ul.innerHTML = `
+          <li class="p-3 text-center text-xs text-slate-500 bg-slate-950/50 rounded-xl border border-slate-800">
+            No active targets queued for today. Add a custom task or pick a syllabus topic above.
+          </li>
+        `;
+        return;
+      }
+
+      appState.todos.forEach((todo, idx) => {
+        const li = document.createElement('li');
+        li.className = `p-3 rounded-xl border transition flex items-center justify-between gap-3 ${todo.done ? 'bg-slate-950/40 border-slate-800/60 opacity-60' : 'bg-slate-950/90 border-slate-800'}`;
+
+        li.innerHTML = `
+          <div class="flex items-center gap-3 flex-1 min-w-0">
+            <input type="checkbox" class="custom-checkbox flex-shrink-0" onchange="toggleTodoDone(${idx})" ${todo.done ? 'checked' : ''}>
+            <span class="text-xs ${todo.done ? 'line-through text-slate-500' : 'text-slate-200'} truncate">${todo.text}</span>
+          </div>
+          <button onclick="removeTodo(${idx})" class="text-slate-500 hover:text-red-400 text-xs px-2 py-1 rounded transition flex-shrink-0">
+            &times;
+          </button>
+        `;
+        ul.appendChild(li);
+      });
+    }
+
+    function addCustomTodo() {
+      const input = document.getElementById('customTodoInput');
+      if (!input) return;
+      const text = input.value.trim();
+      if (!text) return;
+      if (!appState.todos) appState.todos = [];
+      appState.todos.unshift({ text: text, done: false, date: getTodayDateStr() });
+      input.value = "";
+      saveState();
+      renderTodoList();
+      showToast('Custom goal added to To-Do queue.');
+    }
+
+    function addSyllabusTodo() {
+      const select = document.getElementById('syllabusTopicDropdown');
+      if (!select) return;
+      const text = select.value;
+      if (!text) return;
+      if (!appState.todos) appState.todos = [];
+      appState.todos.unshift({ text: text, done: false, date: getTodayDateStr() });
+      select.value = "";
+      saveState();
+      renderTodoList();
+      showToast('Syllabus subtopic queued for revision!', '📚');
+    }
+
+    function toggleTodoDone(idx) {
+      if (appState.todos && appState.todos[idx]) {
+        appState.todos[idx].done = !appState.todos[idx].done;
+        saveState();
+        renderTodoList();
+      }
+    }
+
+    function removeTodo(idx) {
+      if (appState.todos) {
+        appState.todos.splice(idx, 1);
+        saveState();
+        renderTodoList();
+      }
+    }
+
+    function clearDoneTodos() {
+      if (!appState.todos) return;
+      appState.todos = appState.todos.filter(t => !t.done);
+      saveState();
+      renderTodoList();
+      showToast('Completed items cleared.');
+    }
+
+    /* ========================================================================= */
+    /* 8. COUNTDOWNS & FOCUS TIMERS ENGINE (FIXED & EXPANDED)                    */
+    /* ========================================================================= */
+    function setJeeMainTargetDate(dateStr) {
+      appState.jeeMainTargetDate = dateStr;
+      saveState();
+      updateCountdowns();
+      updatePyqChartsAndProjections();
+    }
+
+    function updateCountdowns() {
+      try {
+        const now = new Date().getTime();
+
+        // 1. JEE Main Countdown
+        const jeeTargetStr = appState.jeeMainTargetDate || '2027-01-24';
+        const targetJeeMainTime = new Date(jeeTargetStr + "T09:00:00").getTime();
+        const diffMain = targetJeeMainTime - now;
+
+        const elDMain = document.getElementById('cd-main-days');
+        const elHMain = document.getElementById('cd-main-hours');
+        const elMMain = document.getElementById('cd-main-mins');
+        const elSMain = document.getElementById('cd-main-secs');
+        const elMainStatus = document.getElementById('jeeMainDateDisplayStatus');
+
+        if (diffMain > 0) {
+          const d = Math.floor(diffMain / (1000 * 60 * 60 * 24));
+          const h = Math.floor((diffMain % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+          const m = Math.floor((diffMain % (1000 * 60 * 60)) / (1000 * 60));
+          const s = Math.floor((diffMain % (1000 * 60)) / 1000);
+
+          if (elDMain) elDMain.innerText = d;
+          if (elHMain) elHMain.innerText = h < 10 ? '0' + h : h;
+          if (elMMain) elMMain.innerText = m < 10 ? '0' + m : m;
+          if (elSMain) elSMain.innerText = s < 10 ? '0' + s : s;
+          if (elMainStatus) elMainStatus.innerText = `Target Reference: ${jeeTargetStr} (09:00 AM)`;
+        } else {
+          if (elDMain) elDMain.innerText = "0";
+          if (elHMain) elHMain.innerText = "00";
+          if (elMMain) elMMain.innerText = "00";
+          if (elSMain) elSMain.innerText = "00";
+          if (elMainStatus) elMainStatus.innerText = `Target date reached!`;
+        }
+
+        // 2. Custom Target Countdown
+        const custInput = document.getElementById('customTargetDateInput');
+        const custStr = appState.customTargetDate || (custInput ? custInput.value : '');
+        const elDCust = document.getElementById('cd-cust-days');
+        const elHCust = document.getElementById('cd-cust-hours');
+        const elMCust = document.getElementById('cd-cust-mins');
+        const elSCust = document.getElementById('cd-cust-secs');
+        const elCustStatus = document.getElementById('customDateDisplayStatus');
+
+        if (custStr) {
+          const custDate = new Date(custStr + "T00:00:00").getTime();
+          const diffCust = custDate - now;
+
+          if (diffCust > 0) {
+            const d = Math.floor(diffCust / (1000 * 60 * 60 * 24));
+            const h = Math.floor((diffCust % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((diffCust % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((diffCust % (1000 * 60)) / 1000);
+
+            if (elDCust) elDCust.innerText = d;
+            if (elHCust) elHCust.innerText = h < 10 ? '0' + h : h;
+            if (elMCust) elMCust.innerText = m < 10 ? '0' + m : m;
+            if (elSCust) elSCust.innerText = s < 10 ? '0' + s : s;
+            if (elCustStatus) elCustStatus.innerText = `Target: ${custStr} (${d} Days remaining)`;
+          } else {
+            if (elDCust) elDCust.innerText = "0";
+            if (elHCust) elHCust.innerText = "00";
+            if (elMCust) elMCust.innerText = "00";
+            if (elSCust) elSCust.innerText = "00";
+            if (elCustStatus) elCustStatus.innerText = "Target reached!";
+          }
+        }
+      } catch (e) {
+        console.error("Countdown calculation error", e);
+      }
+    }
+
+    function setCustomDate(val) {
+      appState.customTargetDate = val;
+      saveState();
+      updateCountdowns();
+    }
+
+    /* 8b. TIME REMAINING FOR THE DAY ENGINE */
+    function updateDayRemaining() {
+      const now = new Date();
+      const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
+      const diffMs = endOfDay.getTime() - now.getTime();
+
+      const hours = Math.floor(diffMs / (1000 * 60 * 60));
+      const mins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+      const secs = Math.floor((diffMs % (1000 * 60)) / 1000);
+
+      const elH = document.getElementById('day-rem-hours');
+      const elM = document.getElementById('day-rem-mins');
+      const elS = document.getElementById('day-rem-secs');
+
+      if (elH) elH.innerText = hours < 10 ? '0' + hours : hours;
+      if (elM) elM.innerText = mins < 10 ? '0' + mins : mins;
+      if (elS) elS.innerText = secs < 10 ? '0' + secs : secs;
+
+      const secondsPassed = (now.getHours() * 3600) + (now.getMinutes() * 60) + now.getSeconds();
+      const percentPassed = Math.min(100, Math.round((secondsPassed / 86400) * 100));
+
+      const elPct = document.getElementById('dayPassedPercent');
+      const elBar = document.getElementById('dayRemainingBar');
+      if (elPct) elPct.innerText = `${percentPassed}%`;
+      if (elBar) elBar.style.width = `${percentPassed}%`;
+    }
+
+    /* 8c. TARGET STUDY SESSION TIMER */
+    let sessionTotalSeconds = 90 * 60;
+    let sessionRemainingSeconds = 90 * 60;
+    let sessionInterval = null;
+    let sessionRunning = false;
+
+    function setSessionTargetMinutes(mins) {
+      sessionTotalSeconds = mins * 60;
+      sessionRemainingSeconds = sessionTotalSeconds;
+      if (sessionRunning) {
+        clearInterval(sessionInterval);
+        sessionRunning = false;
+        const btn = document.getElementById('btnSessionToggle');
+        if (btn) btn.innerText = "Start Block";
+      }
+      const inp = document.getElementById('customSessionMinsInput');
+      if (inp) inp.value = mins;
+      const status = document.getElementById('sessionTimerStatus');
+      if (status) status.innerText = `Target Block: ${mins} Minutes`;
+      renderSessionTimer();
+    }
+
+    function applyCustomSessionTarget() {
+      const inp = document.getElementById('customSessionMinsInput');
+      const val = parseInt(inp?.value) || 60;
+      setSessionTargetMinutes(Math.max(5, Math.min(val, 600)));
+    }
+
+    function toggleSessionTimer() {
+      const btn = document.getElementById('btnSessionToggle');
+      const status = document.getElementById('sessionTimerStatus');
+
+      if (sessionRunning) {
+        clearInterval(sessionInterval);
+        sessionRunning = false;
+        if (btn) btn.innerText = "Resume Block";
+        if (status) status.innerText = "Session Paused";
+      } else {
+        sessionRunning = true;
+        if (btn) btn.innerText = "Pause Block";
+        if (status) status.innerText = "Deep Focus Active 🔥";
+
+        sessionInterval = setInterval(() => {
+          if (sessionRemainingSeconds > 0) {
+            sessionRemainingSeconds--;
+            renderSessionTimer();
+          } else {
+            clearInterval(sessionInterval);
+            sessionRunning = false;
+            if (btn) btn.innerText = "Start Next Block";
+            if (status) status.innerText = "Target Block Completed! Well Done!";
+            showToast("Target study session complete! Excellent focus.", "🏆");
+          }
+        }, 1000);
+      }
+    }
+
+    function resetSessionTimer() {
+      clearInterval(sessionInterval);
+      sessionRunning = false;
+      sessionRemainingSeconds = sessionTotalSeconds;
+      const btn = document.getElementById('btnSessionToggle');
+      if (btn) btn.innerText = "Start Block";
+      const status = document.getElementById('sessionTimerStatus');
+      if (status) status.innerText = `Target Block: ${Math.round(sessionTotalSeconds / 60)} Minutes`;
+      renderSessionTimer();
+    }
+
+    function renderSessionTimer() {
+      const h = Math.floor(sessionRemainingSeconds / 3600);
+      const m = Math.floor((sessionRemainingSeconds % 3600) / 60);
+      const s = sessionRemainingSeconds % 60;
+
+      const hh = h < 10 ? '0' + h : h;
+      const mm = m < 10 ? '0' + m : m;
+      const ss = s < 10 ? '0' + s : s;
+
+      const disp = document.getElementById('sessionTimerDisplay');
+      if (disp) disp.innerText = `${hh}:${mm}:${ss}`;
+
+      const pct = sessionTotalSeconds ? Math.min(100, Math.round(((sessionTotalSeconds - sessionRemainingSeconds) / sessionTotalSeconds) * 100)) : 0;
+      const bar = document.getElementById('sessionTimerProgressBar');
+      if (bar) bar.style.width = pct + '%';
+    }
+
+    // Stopwatch & Pomodoro
+    let timerInterval = null;
+    let timerSeconds = 0;
+    let timerRunning = false;
+    let timerMode = 'stopwatch';
+
+    function setTimerMode(mode) {
+      timerMode = mode;
+      clearInterval(timerInterval);
+      timerRunning = false;
+      const toggleBtn = document.getElementById('btnTimerToggle');
+      if (toggleBtn) toggleBtn.innerText = "Start Session";
+
+      ['sw', 'pomo', 'pomo50'].forEach(m => {
+        const btn = document.getElementById(`btn-mode-${m}`);
+        if (!btn) return;
+        btn.className = (m === mode) ? "px-2 py-0.5 rounded font-bold bg-indigo-600 text-white" : "px-2 py-0.5 rounded font-semibold text-slate-400";
+      });
+
+      const label = document.getElementById('timerStatusLabel');
+      if (mode === 'stopwatch') {
+        timerSeconds = 0;
+        if (label) label.innerText = "Stopwatch Ready";
+      } else if (mode === 'pomo') {
+        timerSeconds = 25 * 60;
+        if (label) label.innerText = "25m Sprint Ready";
+      } else if (mode === 'pomo50') {
+        timerSeconds = 50 * 60;
+        if (label) label.innerText = "50m Deep Work Ready";
+      }
+      renderTimerClock();
+    }
+
+    function toggleTimer() {
+      const btn = document.getElementById('btnTimerToggle');
+      const label = document.getElementById('timerStatusLabel');
+      if (timerRunning) {
+        clearInterval(timerInterval);
+        timerRunning = false;
+        if (btn) btn.innerText = "Resume Session";
+        if (label) label.innerText = "Paused";
+      } else {
+        timerRunning = true;
+        if (btn) btn.innerText = "Pause Session";
+        if (label) label.innerText = "Focus Active ⏳";
+
+        timerInterval = setInterval(() => {
+          if (timerMode === 'stopwatch') {
+            timerSeconds++;
+          } else {
+            if (timerSeconds > 0) {
+              timerSeconds--;
+            } else {
+              clearInterval(timerInterval);
+              timerRunning = false;
+              if (btn) btn.innerText = "Start Next Session";
+              if (label) label.innerText = "Time Up! Take a rest break.";
+              showToast("Timer completed! Stand up, hydrate, and stretch.", "⏰");
+            }
+          }
+          renderTimerClock();
+        }, 1000);
+      }
+    }
+
+    function resetTimer() {
+      setTimerMode(timerMode);
+    }
+
+    function renderTimerClock() {
+      const h = Math.floor(timerSeconds / 3600);
+      const m = Math.floor((timerSeconds % 3600) / 60);
+      const s = timerSeconds % 60;
+
+      const hh = h < 10 ? '0' + h : h;
+      const mm = m < 10 ? '0' + m : m;
+      const ss = s < 10 ? '0' + s : s;
+
+      const disp = document.getElementById('timerDisplay');
+      if (disp) disp.innerText = `${hh}:${mm}:${ss}`;
+    }
+
+    /* ========================================================================= */
+    /* 9. OFFLINE WEB AUDIO SYNTHESIZER (WHITE, PINK, BROWN & 40HZ)              */
+    /* ========================================================================= */
+    let audioContext = null;
+    let activeSoundNode = null;
+    let gainControlNode = null;
+    let currentNoisePlaying = null;
+
+    function initAudioEngine() {
+      if (!audioContext) {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        gainControlNode = audioContext.createGain();
+        const volVal = parseFloat(document.getElementById('audioVolumeSlider')?.value) || 0.4;
+        gainControlNode.gain.value = volVal;
+        gainControlNode.connect(audioContext.destination);
+      }
+      if (audioContext.state === 'suspended') {
+        audioContext.resume();
+      }
+    }
+
+    function stopActiveNoise() {
+      if (activeSoundNode) {
+        if (activeSoundNode.stop) activeSoundNode.stop();
+        if (activeSoundNode.oscA) {
+          activeSoundNode.oscA.stop();
+          activeSoundNode.oscB.stop();
+        }
+        activeSoundNode = null;
+      }
+      currentNoisePlaying = null;
+      ['white', 'pink', 'brown', 'binaural'].forEach(n => {
+        const btn = document.getElementById(`btn-sound-${n}`);
+        if (btn) btn.classList.remove('border-emerald-500', 'bg-emerald-950/40');
+      });
+    }
+
+    function setAudioVolume(val) {
+      if (gainControlNode) gainControlNode.gain.value = parseFloat(val);
+      const lbl = document.getElementById('audioVolumeLabel');
+      if (lbl) lbl.innerText = `${Math.round(val * 100)}%`;
+    }
+
+    function toggleAudioNoise(type) {
+      initAudioEngine();
+
+      if (currentNoisePlaying === type) {
+        stopActiveNoise();
+        showToast("Audio stopped.");
+        return;
+      }
+
+      stopActiveNoise();
+      currentNoisePlaying = type;
+
+      const btn = document.getElementById(`btn-sound-${type}`);
+      if (btn) btn.classList.add('border-emerald-500', 'bg-emerald-950/40');
+
+      const sampleRate = audioContext.sampleRate;
+      const bufferSize = sampleRate * 2;
+      const buffer = audioContext.createBuffer(1, bufferSize, sampleRate);
+      const output = buffer.getChannelData(0);
+
+      if (type === 'white') {
+        for (let i = 0; i < bufferSize; i++) {
+          output[i] = Math.random() * 2 - 1;
+        }
+        const whiteNode = audioContext.createBufferSource();
+        whiteNode.buffer = buffer;
+        whiteNode.loop = true;
+        whiteNode.connect(gainControlNode);
+        whiteNode.start();
+        activeSoundNode = whiteNode;
+        showToast("White noise playing.", "⚪");
+
+      } else if (type === 'pink') {
+        let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
+        for (let i = 0; i < bufferSize; i++) {
+          const white = Math.random() * 2 - 1;
+          b0 = 0.99886 * b0 + white * 0.0555179;
+          b1 = 0.99332 * b1 + white * 0.0750759;
+          b2 = 0.96900 * b2 + white * 0.1538520;
+          b3 = 0.86650 * b3 + white * 0.3104856;
+          b4 = 0.55000 * b4 + white * 0.5329522;
+          b5 = -0.7616 * b5 - white * 0.0168980;
+          output[i] = (b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362) * 0.11;
+          b6 = white * 0.115926;
+        }
+        const pinkNode = audioContext.createBufferSource();
+        pinkNode.buffer = buffer;
+        pinkNode.loop = true;
+        pinkNode.connect(gainControlNode);
+        pinkNode.start();
+        activeSoundNode = pinkNode;
+        showToast("Pink noise playing.", "🌸");
+
+      } else if (type === 'brown') {
+        let lastOut = 0.0;
+        for (let i = 0; i < bufferSize; i++) {
+          const white = Math.random() * 2 - 1;
+          output[i] = (lastOut + (0.02 * white)) / 1.02;
+          lastOut = output[i];
+          output[i] *= 3.5;
+        }
+        const brownNode = audioContext.createBufferSource();
+        brownNode.buffer = buffer;
+        brownNode.loop = true;
+        brownNode.connect(gainControlNode);
+        brownNode.start();
+        activeSoundNode = brownNode;
+        showToast("Brown / Cabin noise playing.", "🟤");
+
+      } else if (type === 'binaural') {
+        const merger = audioContext.createChannelMerger(2);
+        const oscA = audioContext.createOscillator();
+        const oscB = audioContext.createOscillator();
+        oscA.frequency.value = 200;
+        oscB.frequency.value = 240;
+
+        oscA.connect(merger, 0, 0);
+        oscB.connect(merger, 0, 1);
+        merger.connect(gainControlNode);
+
+        oscA.start();
+        oscB.start();
+        activeSoundNode = { oscA, oscB };
+        showToast("40Hz Gamma wave active. Use headphones!", "🧠");
+      }
+    }
+
+    /* ========================================================================= */
+    /* 10. DAY-TO-DAY HISTORY & ACTIVITY LOG ENGINE                              */
+    /* ========================================================================= */
+    function renderHistoryLogs() {
+      const tableBody = document.getElementById('historyLogTableBody');
+      if (!tableBody) return;
+      tableBody.innerHTML = "";
+
+      const todayStr = getTodayDateStr();
+      const histDateInput = document.getElementById('historyDateInput');
+      if (histDateInput && !histDateInput.value) histDateInput.value = todayStr;
+
+      loadDateHistory(histDateInput ? histDateInput.value : todayStr);
+
+      const logKeys = Object.keys(appState.dailyLogs || {}).sort().reverse();
+
+      if (logKeys.length === 0) {
+        tableBody.innerHTML = `
+          <tr>
+            <td colspan="5" class="py-6 text-center text-slate-500 text-xs">
+              No historical records found yet. Begin solving questions today!
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      logKeys.forEach(dateKey => {
+        const entry = appState.dailyLogs[dateKey];
+        const target = entry.target || 1;
+        const solved = entry.solved || 0;
+        const pct = Math.min(100, Math.round((solved / target) * 100));
+
+        const isToday = dateKey === todayStr;
+
+        const tr = document.createElement('tr');
+        tr.className = `hover:bg-slate-800/40 transition cursor-pointer ${isToday ? 'bg-indigo-950/20' : ''}`;
+        tr.onclick = () => {
+          if (histDateInput) histDateInput.value = dateKey;
+          loadDateHistory(dateKey);
+        };
+
+        tr.innerHTML = `
+          <td class="py-3 px-4 font-mono font-bold text-slate-200">
+            ${dateKey} ${isToday ? '<span class="text-[9px] bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 px-1.5 py-0.5 rounded ml-1.5">TODAY</span>' : ''}
+          </td>
+          <td class="py-3 px-3 text-center font-mono font-semibold text-slate-400">${target} Qs</td>
+          <td class="py-3 px-3 text-center font-mono font-bold text-emerald-400">${solved} Qs</td>
+          <td class="py-3 px-3 text-center font-mono text-[11px] text-slate-300">
+            <span class="text-blue-400">M:${entry.math || 0}</span> • 
+            <span class="text-purple-400">P:${entry.phy || 0}</span> • 
+            <span class="text-emerald-400">C:${entry.chem || 0}</span>
+          </td>
+          <td class="py-3 px-3 text-center">
+            <span class="font-mono text-xs px-2 py-0.5 rounded font-bold ${pct >= 100 ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-slate-800 text-slate-300'}">
+              ${pct}%
+            </span>
+          </td>
+        `;
+        tableBody.appendChild(tr);
+      });
+    }
+
+    function loadDateHistory(dateStr) {
+      const entry = (appState.dailyLogs && appState.dailyLogs[dateStr]) ? appState.dailyLogs[dateStr] : { target: 85, solved: 0, math: 0, phy: 0, chem: 0 };
+      const heading = document.getElementById('histDateHeading');
+      const badge = document.getElementById('histDateBadge');
+      const valTarget = document.getElementById('histDateTargetVal');
+      const valSolved = document.getElementById('histDateSolvedVal');
+      const valPercent = document.getElementById('histDatePercentVal');
+
+      const isToday = dateStr === getTodayDateStr();
+
+      if (heading) heading.innerText = isToday ? `Today (${dateStr})` : dateStr;
+      if (badge) badge.innerText = isToday ? 'TODAY\'S RECORD' : 'LOGGED DATE';
+      if (valTarget) valTarget.innerText = entry.target;
+      if (valSolved) valSolved.innerText = entry.solved;
+
+      const pct = entry.target ? Math.round((entry.solved / entry.target) * 100) : 0;
+      if (valPercent) valPercent.innerText = `${pct}%`;
+    }
+
+    /* ========================================================================= */
+    /* 11. DATA BACKUP & RESTORE UTILITY                                         */
+    /* ========================================================================= */
+    function exportData() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appState, null, 2));
+      const dlAnchor = document.createElement('a');
+      dlAnchor.setAttribute("href", dataStr);
+      dlAnchor.setAttribute("download", `JEE_Tracker_Backup_${getTodayDateStr()}.json`);
+      document.body.appendChild(dlAnchor);
+      dlAnchor.click();
+      dlAnchor.remove();
+      showToast("Progress backup downloaded successfully!", "💾");
+    }
+
+    /* ========================================================================= */
+    /* 12. INITIALIZATION ON WINDOW LOAD                                         */
+    /* ========================================================================= */
+    window.onload = function () {
+      loadState();
+      refreshQuote();
+      renderSyllabus();
+      populateTopicDropdown();
+      renderTodoList();
+      syncPyqInputs();
+      updateHeaderTodaySolved();
+
+      // Sync JEE Main date selector
+      const yearSelect = document.getElementById('jeeMainYearSelect');
+      if (yearSelect && appState.jeeMainTargetDate) {
+        yearSelect.value = appState.jeeMainTargetDate;
+      }
+
+      // Sync Custom Target Date picker
+      if (appState.customTargetDate) {
+        const custEl = document.getElementById('customTargetDateInput');
+        if (custEl) custEl.value = appState.customTargetDate;
+      }
+
+      // Start all countdown loops
+      updateCountdowns();
+      setInterval(updateCountdowns, 1000);
+
+      // Start Time Remaining for the Day
+      updateDayRemaining();
+      setInterval(updateDayRemaining, 1000);
+
+      // Initialize Target Study Session Timer
+      renderSessionTimer();
+
+      // Switch to saved section
+      switchSection(appState.activeSection || 'syllabus');
+    };
+  </script>
+</body>
+</html>
